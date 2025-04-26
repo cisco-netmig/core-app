@@ -32,5 +32,4 @@ from .registry import (
     PersistentDict
 )
 from .paths import *
-from .scp import SCPClient
 from .telemetry import LoggingAgent

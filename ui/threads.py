@@ -16,6 +16,7 @@ import logging
 import shutil
 import subprocess
 import re
+import json
 import requests
 import getpass
 import base64
@@ -26,7 +27,7 @@ from zipfile import ZipFile
 from PyQt5 import QtCore
 from requests import get, ConnectionError, RequestException
 from paramiko import SSHClient, AutoAddPolicy
-
+from scp import SCPClient
 
 class CheckGitVersion(QtCore.QThread):
     """
@@ -604,6 +605,239 @@ class GitInstaller(QtCore.QThread):
 
             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
 
+            logging.debug("Requirements installed successfully.")
+        except Exception as e:
+            logging.error(f"Failed to install requirements: {e}")
+
+
+class ScpSync(QtCore.QThread):
+    """
+    A QThread-based class that asynchronously synchronizes script metadata and assets
+    from a single SCP-accessible file server.
+
+    Emits:
+        script_data_chunk (dict): Emitted for each script UUID after its data is fetched and processed.
+    """
+
+    script_data_chunk = QtCore.pyqtSignal(dict)
+
+    def __init__(self, scp_config, local_cache):
+        """
+        Initializes the ScpSync thread.
+
+        Args:
+            scp_config (dict): SCP connection details.
+                Example: {"host": "10.1.1.1", "user": "admin", "base_path": "/scripts"}
+            local_cache (dict): Dictionary of locally cached script metadata, keyed by UUID.
+        """
+        super().__init__()
+        self.scp_config = scp_config
+        self.local_cache = local_cache
+
+    def run(self):
+        """
+        Thread entry point.
+
+        Connects to the SCP server, lists script directories under the base path,
+        downloads key files (__meta__, README.md, requirements.txt, __icon__.ico)
+        for each script, processes them, and emits the resulting script data.
+        """
+        try:
+            ssh = SSHClient()
+            ssh.set_missing_host_key_policy(AutoAddPolicy())
+            ssh.connect(hostname=self.scp_config["ip"],
+                        username=self.scp_config["username"],
+                        password=self.scp_config["password"]
+                        )
+
+            with SCPClient(ssh.get_transport()) as scp:
+                remote_script_path = f"{self.scp_config['path']}/scripts"
+                stdin, stdout, stderr = ssh.exec_command(f'ls {remote_script_path}')
+                folders = stdout.read().decode().splitlines()
+
+                for folder in folders:
+                    try:
+                        remote_path = f'{remote_script_path}/{folder}'
+                        local_temp_dir = os.path.join(tempfile.gettempdir(), folder)
+                        os.makedirs(local_temp_dir, exist_ok=True)
+
+                        # Download important files
+                        for file in ['__meta__', 'README.md', 'requirements.txt', '__icon__.ico']:
+                            try:
+                                scp.get(f"{remote_path}/{file}", os.path.join(local_temp_dir, file))
+                            except Exception:
+                                continue
+
+                        script_data = self.process_local_files(local_temp_dir, remote_path)
+                        if script_data:
+                            self.script_data_chunk.emit(script_data)
+
+                    except Exception as e:
+                        logging.warning(f"[SCP Folder Process Fail] {folder}: {e}")
+
+        except Exception as e:
+            logging.error(f"[SCP Connection Fail] {self.scp_config.get('host')}: {e}")
+
+    def process_local_files(self, local_dir, remote_path):
+        """
+        Parses downloaded files and constructs the script metadata dictionary.
+
+        Args:
+            local_dir (str): Local temporary directory containing downloaded script files.
+            remote_path (str): Remote path of the script on the SCP server.
+
+        Returns:
+            dict or None: Dictionary containing script UUID and metadata, or None if parsing fails.
+        """
+        try:
+            with open(os.path.join(local_dir, "__meta__")) as f:
+                meta_data = json.load(f)
+
+            uuid = meta_data.get("uuid")
+            if not uuid:
+                return None
+
+            script_data = {
+                "uuid": uuid,
+                "source": "scp",
+                "module": remote_path,
+                "load": True,
+                **meta_data,
+                "readme": self.read_file(os.path.join(local_dir, "README.md")),
+                "requirements": self.read_file(os.path.join(local_dir, "requirements.txt")),
+                "icon_data": self.read_icon(os.path.join(local_dir, "__icon__.ico")),
+            }
+
+            local_meta = self.local_cache.get(uuid, {})
+            script_data["status"] = self.determine_status(meta_data, local_meta)
+            return {uuid: script_data}
+        except Exception as e:
+            logging.error(f"[SCP Local Parse Fail] {local_dir}: {e}")
+            return None
+
+    def read_file(self, path):
+        """
+        Reads the content of a text file.
+
+        Args:
+            path (str): Path to the text file.
+
+        Returns:
+            str: Content of the file, or an empty string if the read fails.
+        """
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return f.read()
+        except Exception:
+            return ""
+
+    def read_icon(self, path):
+        """
+        Reads and base64-encodes a binary icon file.
+
+        Args:
+            path (str): Path to the icon file.
+
+        Returns:
+            str: Base64-encoded string of the icon, or an empty string if the read fails.
+        """
+        try:
+            with open(path, "rb") as f:
+                return base64.b64encode(f.read()).decode("utf-8")
+        except Exception:
+            return ""
+
+    def determine_status(self, meta_data, local_meta):
+        """
+        Compares remote and local metadata to determine the sync status.
+
+        Args:
+            meta_data (dict): Metadata from the remote server.
+            local_meta (dict): Locally cached metadata.
+
+        Returns:
+            str: 'install' if new, 'update' if version changed, 'installed' if already up to date.
+        """
+        if not local_meta:
+            return "install"
+        elif meta_data.get("version") != local_meta.get("version"):
+            return "update"
+        return "installed"
+
+
+class ScpInstaller(QtCore.QThread):
+    """
+    A QThread class that downloads a script from an SCP server and installs any required packages
+    in the background to prevent blocking the main UI thread.
+
+    Emits:
+        finished (bool, str, str): Emitted when the operation completes.
+            - bool: True if successful, False otherwise.
+            - str: Script name.
+            - str: Error message if any, else an empty string.
+    """
+
+    finished = QtCore.pyqtSignal(bool, str, str)
+
+    def __init__(self, script_data, scp_config):
+        """
+        Initializes the ScpInstaller thread.
+
+        Args:
+            script_data (dict): Metadata of the script including 'module' (remote path) and 'name'.
+            scp_config (dict): SCP connection configuration containing at least 'scp_host' and 'scp_user'.
+        """
+        super().__init__()
+        self.script_data = script_data
+        self.scp_config = scp_config
+
+    def run(self):
+        """
+        Executes the SCP download of the script files into the designated scripts directory,
+        and installs any required packages.
+        """
+
+        script_name = self.script_data.get("name")
+        remote_path = self.script_data.get("module")
+        scripts_base_dir = os.path.join(sys.modules["utils"].PATH_SCRIPTS_DIR)
+
+        try:
+            ssh = SSHClient()
+            ssh.set_missing_host_key_policy(AutoAddPolicy())
+            ssh.connect(
+                hostname=self.scp_config.get("ip"),
+                username=self.scp_config.get("username"),
+                password=self.scp_config.get("password")
+            )
+
+            with SCPClient(ssh.get_transport()) as scp:
+                scp.get(remote_path, local_path=scripts_base_dir, recursive=True)
+
+            requirements_text = self.script_data.get("requirements", "").strip()
+            if requirements_text:
+                logging.debug(f"Installing requirements for {script_name}")
+                self.install_requirements(requirements_text)
+
+            logging.info(f"Successfully installed script {script_name} via SCP.")
+            self.finished.emit(True, script_name, "")
+        except Exception as e:
+            logging.error(f"Failed to install script {script_name} via SCP: {e}")
+            self.finished.emit(False, script_name, str(e))
+
+    def install_requirements(self, requirements_text):
+        """
+        Installs Python packages listed in the requirements text.
+
+        Args:
+            requirements_text (str): Contents of requirements.txt
+        """
+        try:
+            with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".txt") as tmp_req_file:
+                tmp_req_file.write(requirements_text)
+                tmp_req_file.flush()
+                temp_path = tmp_req_file.name
+
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
             logging.debug("Requirements installed successfully.")
         except Exception as e:
             logging.error(f"Failed to install requirements: {e}")

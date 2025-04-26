@@ -66,5 +66,7 @@ from .threads import (
     WaitRestart,
     CheckAuthentication,
     GitSync,
-    GitInstaller
+    GitInstaller,
+    ScpSync,
+    ScpInstaller
 )

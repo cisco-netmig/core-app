@@ -172,17 +172,40 @@ class Application(QtWidgets.QApplication):
         self.git_sync_thread.finished.connect(lambda: logging.info("Git synchronization complete."))
         self.git_sync_thread.start()
 
+    def start_scp_sync(self):
+        """
+        Starts a background thread to perform the SCP synchronization.
+
+        This method initializes an ScpSync thread and starts the synchronization process.
+        Once the synchronization is complete, the `on_sync_complete` callback is invoked.
+        """
+        logging.info("SCP synchronizing...")
+        self.cache = self.registry.get_object('cache')
+
+        scp_config = self.settings.get("server")
+
+        if not scp_config:
+            logging.error("SCP settings are incomplete. Cannot start SCP sync.")
+            return
+
+        self.scp_sync_thread = sys.modules["ui"].ScpSync(
+            scp_config=scp_config,
+            local_cache=self.cache.get("scripts")
+        )
+        self.scp_sync_thread.script_data_chunk.connect(self.update_cache)
+        self.scp_sync_thread.finished.connect(lambda: logging.info("SCP synchronization complete."))
+        self.scp_sync_thread.start()
+
     def update_cache(self, script_data):
         """
-        Callback function invoked when the Git sync process is complete.
+        Callback function invoked when the synchronization process (Git or SCP) is complete.
 
         This method processes the result of the synchronization and updates the
-        cache with the retrieved Git remote data.
+        cache with the retrieved script data, whether from Git or SCP.
 
         Args:
-            result (dict): The result of the Git sync operation, typically containing remote data.
-
+            script_data (dict): The result of the sync operation, containing script metadata.
         """
-        logging.debug(f"Git synchronization complete for {script_data.get('name')}.")
+        logging.debug(f"Synchronization complete for {script_data.get('name')}.")
 
-        self.cache["git_remotes"].update(script_data)
+        self.cache["remote_scripts"].update(script_data)

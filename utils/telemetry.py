@@ -106,9 +106,7 @@ class LoggingAgent:
             return
 
         try:
-            remote_path = os.path.join(
-                self.path, f"{getpass.getuser()}.log"
-            ).replace("\\", "/")
+            remote_path = os.path.join(self.path, f"{getpass.getuser()}.log").replace("\\", "/")
 
             sanitized_data = re.sub(r'\\', r'\\\\\\\\', data).strip()
             cmd = f'echo "{sanitized_data}" >> {remote_path}'
@@ -116,7 +114,7 @@ class LoggingAgent:
             self.connection.exec_command(cmd)
             logging.debug(f"Telemetry data echoed to {remote_path}")
         except Exception as e:
-            logging.debug(f"Error sending telemetry data: {e}")
+            logging.error(f"Error sending telemetry data: {e}")
 
     def schedule_job(self):
         """

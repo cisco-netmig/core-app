@@ -871,36 +871,20 @@ class Preferences(QtWidgets.QDialog):
         self.server_password_edit = QtWidgets.QLineEdit()
         self.server_password_edit.setEchoMode(QtWidgets.QLineEdit.Password)
 
-        test_conn_layout = QtWidgets.QHBoxLayout()
-        test_conn_layout.setSpacing(20)
-        test_conn_button = QtWidgets.QPushButton("Test")
-        test_conn_button.clicked.connect(self.test_auth)
-        test_conn_layout.addWidget(test_conn_button)
-        self.test_label = QtWidgets.QLabel()
-        test_conn_layout.addWidget(self.test_label)
+        sync_button = QtWidgets.QPushButton("Sync")
+        sync_button.setFixedWidth(100)
+        sync_button.clicked.connect(self.mainwindow.app.start_scp_sync)
 
         connection_layout.addRow("IP Address", self.server_ip_edit)
         connection_layout.addRow("Path", self.server_path_edit)
         connection_layout.addRow("Username", self.server_username_edit)
         connection_layout.addRow("Password", self.server_password_edit)
-        connection_layout.addRow("", test_conn_layout)
-
-        self.server_repositry = QtWidgets.QCheckBox("Enable SCP repository")
-        self.server_repositry.setChecked(False)
-        self.server_repositry.setDisabled(True)
-        layout.addWidget(self.server_repositry)
+        connection_layout.addRow("", sync_button)
 
         self.server_telemetry = QtWidgets.QCheckBox("Enable telemetry")
         layout.addWidget(self.server_telemetry)
 
         layout.addStretch()
-
-    def test_auth(self):
-        self.test_auth_thread = sys.modules["ui"].CheckAuthentication(self.server_ip_edit.text(),
-                                                                      self.server_username_edit.text(),
-                                                                      self.server_password_edit.text(),
-                                                                      self.test_label)
-        self.test_auth_thread.start()
 
     def _setup_code_sources_tab(self):
         """Setup the code sources widget."""
@@ -949,7 +933,6 @@ class Preferences(QtWidgets.QDialog):
         self.load_all_scripts_checkbox.setChecked(settings_data["load_all_scripts"])
         self.sys_paths_text.setText("\n".join(settings_data["sys_paths"]))
         self.server_telemetry.setChecked(settings_data["telemetry_enabled"])
-        self.server_repositry.setChecked(settings_data["server_repo_enabled"])
         self.server_ip_edit.setText(settings_data["server"]["ip"])
         self.server_path_edit.setText(settings_data["server"]["path"])
         self.server_username_edit.setText(settings_data["server"]["username"])
@@ -977,7 +960,6 @@ class Preferences(QtWidgets.QDialog):
             "load_all_scripts": self.load_all_scripts_checkbox.isChecked(),
             "sys_paths": self.sys_paths_text.toPlainText().splitlines(),
             "telemetry_enabled": self.server_telemetry.isChecked(),
-            "server_repo_enabled": self.server_repositry.isChecked(),
             "server": {
                 "ip": self.server_ip_edit.text(),
                 "path": self.server_path_edit.text(),
@@ -1766,7 +1748,7 @@ class Inventory(QtWidgets.QDialog):
             icon = self.mainwindow.icons.get("python")
             readme_content = "Not available"
 
-            # --- Local script (with a path) ---
+            # --- Local script ---
             if script_data.get("source") == "local":
                 script_path = str(script_data["module"])
                 try:
@@ -1783,9 +1765,13 @@ class Inventory(QtWidgets.QDialog):
 
                 card.badge_icon.setPixmap(self.mainwindow.icons["hdd"].pixmap(20, 20))
 
-            # --- Remote or Merged Script (git) ---
-            if script_data.get("source") == "git":
-                card.badge_icon.setPixmap(self.mainwindow.icons["git"].pixmap(20, 20))
+            # --- Remote (git or scp) ---
+            if script_data.get("source") in ["git", "scp"]:
+
+                if script_data.get("source") == "git":
+                    card.badge_icon.setPixmap(self.mainwindow.icons["git"].pixmap(20, 20))
+                else:
+                    card.badge_icon.setPixmap(self.mainwindow.icons["scp-server"].pixmap(20, 20))
 
                 readme_content = script_data.get("readme", "Not available")
                 icon_b64 = script_data.get("icon_data")
@@ -1865,7 +1851,7 @@ class Inventory(QtWidgets.QDialog):
 
         cache = self.mainwindow.cache
         local_scripts = cache.get("scripts", {})
-        remote_scripts = cache.get("git_remotes", {})
+        remote_scripts = cache.get("remote_scripts", {})
         merged_scripts = {}
 
         all_script_ids = set(local_scripts.keys()) | set(remote_scripts.keys())
@@ -1919,17 +1905,16 @@ class Inventory(QtWidgets.QDialog):
 
     def install_repo(self, script_data, card):
         """
-        Initiates the installation or update of a script repository in a background thread
-        using GitInstaller to avoid blocking the UI.
+        Initiates the installation or update of a script using either GitInstaller or ScpInstaller
+        based on the script's source type. Runs in a background thread to avoid blocking the UI.
 
-        Disables the install/update button on the associated card and updates the status label
-        to indicate installation progress.
+        Disables the appropriate button on the associated card and updates the status label
+        to show installation progress.
 
         Args:
-            script_data (dict): Script metadata including 'name', 'module' (repo URL), and 'status'.
-            card (QWidget): The UI card widget representing the script, used to update the button and status label.
+            script_data (dict): Script metadata including 'name', 'module', 'source', 'status', etc.
+            card (QWidget): The UI card widget representing the script.
         """
-
         if script_data.get("status") == "install":
             card.install_button.setDisabled(True)
         elif script_data.get("status") == "update":
@@ -1937,7 +1922,17 @@ class Inventory(QtWidgets.QDialog):
 
         card.status_label.setText(f"Installing {script_data.get('name')}")
 
-        self.installer_thread = sys.modules["ui"].GitInstaller(script_data)
+        source = script_data.get("source", "")
+
+        if source == "git":
+            self.installer_thread = sys.modules["ui"].GitInstaller(script_data)
+        elif source == "scp":
+            self.installer_thread = sys.modules["ui"].ScpInstaller(script_data, self.mainwindow.settings.get("server"))
+        else:
+            logging.error(f"Unsupported source type: {source}")
+            card.status_label.setText(f"Failed: Unsupported source {source}")
+            return
+
         self.installer_thread.finished.connect(self.on_repo_installed)
         self.installer_thread.start()
 

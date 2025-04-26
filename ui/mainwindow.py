@@ -181,7 +181,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.settings.get("load_all_scripts"):
             for script_id in self.cache["scripts"]:
                 self.cache["scripts"][script_id].update(load=True)
-        logging.debug("Auto-loading all scripts as per settings.")
+
+        # self.app.start_git_sync()
+        # self.app.start_scp_sync()
 
     def apply_settings(self):
         logging_level = self.settings.get("logging_level")

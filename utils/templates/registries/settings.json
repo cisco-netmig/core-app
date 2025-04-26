@@ -10,7 +10,6 @@
     "logging_level": "INFO",
     "logging_stream": "QStream",
     "telemetry_enabled": false,
-    "server_repo_enabled": false,
     "server": {
         "ip": "",
         "path": "",
