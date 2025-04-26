@@ -14,7 +14,7 @@ QMenuBar {
 }
 QMenuBar:item:selected {
     background-color: #e5e4e2;
-    color: #ffffff;
+    color: #000000;
 }
 /*--------------------------------------------------QMenu--------------------------------------------------*/
 QMenu {
@@ -23,7 +23,7 @@ QMenu {
 }
 QMenu:item:selected {
     background-color: #e5e4e2;
-    color: #ffffff;
+    color: #000000;
 }
 /*--------------------------------------------------QMessageBox--------------------------------------------------*/
 QMessageBox QPushButton {
@@ -436,14 +436,17 @@ QScrollBar {
 #ShowAbout QPushButton:hover {
     border: 1px solid #0070c0;
 }
-#ShowAbout QTabWidget:pane {
-    background-color: transparent;
-}
-#ShowAbout QTabBar:tab {
-    background-color: transparent;
-}
-#ShowAbout QTabBar:tab:!selected {
+#ShowAbout QTabWidget QWidget {
     background-color: #343434;
+}
+#ShowAbout QTabWidget::pane {
+    background-color: #343434;
+}
+#ShowAbout QTabBar::tab {
+    background-color: #343434;
+}
+#ShowAbout QTabBar::tab:!selected {
+    background-color: #1e1e1e;
     color: #b9b9b9;
 }
 /*--------------------------------------------------ShowReadme--------------------------------------------------*/

@@ -427,8 +427,10 @@ class ShowAbout(QtWidgets.QDialog):
         name_label = QtWidgets.QLabel(self.mainwindow.cache['app_info']["title"])
         version_label = QtWidgets.QLabel(f"Version {self.mainwindow.cache['app_info']['version']}")
         copyright_label = QtWidgets.QLabel(self.mainwindow.cache['app_info']["copyright"])
+        git_url = self.mainwindow.cache['app_info']['git']
         git_link_label = QtWidgets.QLabel(
-            f"<a href=\"{self.mainwindow.cache['app_info']['git']}\">{self.mainwindow.cache['app_info']['git']}</a>")
+            f'<a href="{git_url}" style="color:#1a73e8; text-decoration: underline;">{git_url}</a>'
+        )
         git_link_label.setOpenExternalLinks(True)
 
         info_layout.addWidget(name_label)
@@ -481,7 +483,10 @@ class ShowAbout(QtWidgets.QDialog):
         pyqt_layout.addWidget(pyqt_label)
 
         pyqt_link = QtWidgets.QLabel(
-            '<a href="https://www.riverbankcomputing.com/software/pyqt/">https://www.riverbankcomputing.com/software/pyqt/</a>')
+            '<a href="https://www.riverbankcomputing.com/software/pyqt/" '
+            'style="color:#1a73e8; text-decoration:underline;">'
+            'https://www.riverbankcomputing.com/software/pyqt/</a>'
+        )
         pyqt_link.setOpenExternalLinks(True)
         pyqt_link.setStyleSheet("font-weight: 300;")
         pyqt_layout.addWidget(pyqt_link)
@@ -494,7 +499,11 @@ class ShowAbout(QtWidgets.QDialog):
         icons_label.setStyleSheet("font-weight: 300;")
         icons_layout.addWidget(icons_label)
 
-        icons_link = QtWidgets.QLabel('<a href="https://icons8.com/icons/fluency">https://icons8.com/icons/fluency</a>')
+        icons_link = QtWidgets.QLabel(
+            '<a href="https://icons8.com/icons/fluency" '
+            'style="color:#1a73e8; text-decoration:underline;">'
+            'https://icons8.com/icons/fluency</a>'
+        )
         icons_link.setOpenExternalLinks(True)
         icons_link.setStyleSheet("font-weight: 300;")
         icons_layout.addWidget(icons_link)
