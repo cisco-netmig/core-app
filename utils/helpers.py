@@ -252,3 +252,52 @@ def build_script_registry(script_dir: str) -> dict:
                 logging.warning(f"Failed to load {meta_path}: {e}")
     logging.debug(f"Registry built with {len(script_registry)} scripts")
     return script_registry
+
+def install_requirements(requirements_text):
+    """
+    Installs only missing Python packages listed in the requirements text.
+
+    Args:
+        requirements_text (str): Contents of requirements.txt
+    """
+    try:
+        installed = subprocess.check_output([sys.executable, "-m", "pip", "freeze"]).decode().lower()
+        installed_packages = set(pkg.split("==")[0] for pkg in installed.splitlines())
+
+        for line in requirements_text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+
+            if line.startswith("git+"):
+                package_name = _extract_package_name_from_git(line)
+                if package_name and package_name.lower() in installed_packages:
+                    logging.info(f"{package_name} already installed, skipping git install.")
+                    continue
+                install_cmd = [sys.executable, "-m", "pip", "install", line]
+            else:
+                package_name = line.split("==")[0].strip()
+                if package_name.lower() in installed_packages:
+                    logging.info(f"{package_name} already installed, skipping.")
+                    continue
+                install_cmd = [sys.executable, "-m", "pip", "install", line]
+
+            logging.debug(f"Installing {package_name}...")
+            subprocess.check_call(install_cmd)
+
+        logging.debug("All requirements installed successfully.")
+    except Exception as e:
+        logging.error(f"Failed to install requirements: {e}")
+
+def _extract_package_name_from_git(git_url):
+    """
+    Extracts package name from git+ URL if possible.
+    """
+    try:
+        if "#egg=" in git_url:
+            return git_url.split("#egg=")[-1]
+        else:
+            # fallback to repo name
+            return os.path.splitext(os.path.basename(git_url))[0]
+    except Exception:
+        return None

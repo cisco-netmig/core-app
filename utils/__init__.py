@@ -25,7 +25,8 @@ from .helpers import (
     import_from_path,
     launch_python_shell,
     build_script_registry,
-    clear_modules
+    clear_modules,
+    install_requirements
 )
 from .registry import (
     Registry,

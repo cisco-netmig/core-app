@@ -29,6 +29,7 @@ from requests import get, ConnectionError, RequestException
 from paramiko import SSHClient, AutoAddPolicy
 from scp import SCPClient
 
+
 class CheckGitVersion(QtCore.QThread):
     """
     QThread for asynchronously checking the latest version of the application
@@ -583,31 +584,12 @@ class GitInstaller(QtCore.QThread):
             requirements_text = self.script_data.get("requirements", "").strip()
             if requirements_text:
                 logging.debug(f"Installing requirements for {script_name}")
-                self.install_requirements(requirements_text)
+                sys.modules["utils"].install_requirements(requirements_text)
 
             self.finished.emit(True, script_name, "")
         except Exception as e:
             logging.error(f"Failed to install/update script {script_name}: {e}")
             self.finished.emit(False, script_name, str(e))
-
-    def install_requirements(self, requirements_text):
-        """
-        Installs Python packages listed in the requirements text.
-
-        Args:
-            requirements_text (str): Contents of requirements.txt
-        """
-        try:
-            with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".txt") as tmp_req_file:
-                tmp_req_file.write(requirements_text)
-                tmp_req_file.flush()
-                temp_path = tmp_req_file.name
-
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
-
-            logging.debug("Requirements installed successfully.")
-        except Exception as e:
-            logging.error(f"Failed to install requirements: {e}")
 
 
 class ScpSync(QtCore.QThread):
@@ -816,28 +798,10 @@ class ScpInstaller(QtCore.QThread):
             requirements_text = self.script_data.get("requirements", "").strip()
             if requirements_text:
                 logging.debug(f"Installing requirements for {script_name}")
-                self.install_requirements(requirements_text)
+                sys.modules["utils"].install_requirements(requirements_text)
 
             logging.info(f"Successfully installed script {script_name} via SCP.")
             self.finished.emit(True, script_name, "")
         except Exception as e:
             logging.error(f"Failed to install script {script_name} via SCP: {e}")
             self.finished.emit(False, script_name, str(e))
-
-    def install_requirements(self, requirements_text):
-        """
-        Installs Python packages listed in the requirements text.
-
-        Args:
-            requirements_text (str): Contents of requirements.txt
-        """
-        try:
-            with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".txt") as tmp_req_file:
-                tmp_req_file.write(requirements_text)
-                tmp_req_file.flush()
-                temp_path = tmp_req_file.name
-
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
-            logging.debug("Requirements installed successfully.")
-        except Exception as e:
-            logging.error(f"Failed to install requirements: {e}")
