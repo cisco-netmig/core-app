@@ -137,8 +137,8 @@ def md_to_html(content: str, base_path: str = "") -> str:
                 abs_path = os.path.abspath(os.path.join(base_path, img_path)).replace('\\', '/')
                 return f'![{alt_text}](file:///{abs_path})'
             return match.group(0)
-        content = re.sub(r'!\[(.*?)\]\((.*?)\)', fix_image_paths, content)
 
+        content = re.sub(r'!\[(.*?)\]\((.*?)\)', fix_image_paths, content)
 
     # Then convert to HTML as before...
     styled_html = f"""
@@ -253,9 +253,10 @@ def build_script_registry(script_dir: str) -> dict:
     logging.debug(f"Registry built with {len(script_registry)} scripts")
     return script_registry
 
+
 def install_requirements(requirements_text):
     """
-    Installs only missing Python packages listed in the requirements text.
+    Installs only missing Python packages listed in the requirements text, all at once.
 
     Args:
         requirements_text (str): Contents of requirements.txt
@@ -264,32 +265,38 @@ def install_requirements(requirements_text):
         installed = subprocess.check_output([sys.executable, "-m", "pip", "freeze"]).decode().lower()
         installed_packages = set(pkg.split("==")[0] for pkg in installed.splitlines())
 
+        missing_packages = []
+
         for line in requirements_text.splitlines():
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
 
             if line.startswith("git+"):
-                package_name = _extract_package_name_from_git(line)
+                package_name = extract_package_name_from_git(line)
                 if package_name and package_name.lower() in installed_packages:
                     logging.info(f"{package_name} already installed, skipping git install.")
-                    continue
-                install_cmd = [sys.executable, "-m", "pip", "install", line]
+                else:
+                    missing_packages.append(line)
             else:
                 package_name = line.split("==")[0].strip()
                 if package_name.lower() in installed_packages:
-                    logging.info(f"{package_name} already installed, skipping.")
-                    continue
-                install_cmd = [sys.executable, "-m", "pip", "install", line]
+                    logging.debug(f"{package_name} already installed, skipping.")
+                else:
+                    missing_packages.append(line)
 
-            logging.debug(f"Installing {package_name}...")
-            subprocess.check_call(install_cmd)
+        if missing_packages:
+            logging.debug(f"Installing missing packages: {missing_packages}")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", *missing_packages])
+            logging.debug("All missing requirements installed successfully.")
+        else:
+            logging.info("All required packages already installed. Nothing to do.")
 
-        logging.debug("All requirements installed successfully.")
     except Exception as e:
         logging.error(f"Failed to install requirements: {e}")
 
-def _extract_package_name_from_git(git_url):
+
+def extract_package_name_from_git(git_url):
     """
     Extracts package name from git+ URL if possible.
     """
@@ -297,7 +304,8 @@ def _extract_package_name_from_git(git_url):
         if "#egg=" in git_url:
             return git_url.split("#egg=")[-1]
         else:
-            # fallback to repo name
-            return os.path.splitext(os.path.basename(git_url))[0]
+            # fallback: get repo name (last part of URL without .git)
+            base = os.path.basename(git_url)
+            return base.replace(".git", "") if base.endswith(".git") else base
     except Exception:
         return None
