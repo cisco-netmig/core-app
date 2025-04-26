@@ -6,28 +6,23 @@ With an emphasis on flexibility and ease of use, Netmig empowers engineers to in
 
 ---
 
-## 🚀 Key Features
+🚀 Key Features
+🖥 Interactive GUI (Qt5)
+Simplifies script execution through an intuitive interface — no more terminal commands.
 
-- **🖥 Interactive GUI (Qt5)**  
-  Simplifies script execution through an intuitive interface — no more terminal commands.
+🧰 Built-in Tools
+Comes with a growing collection of preloaded scripts designed for network discovery, configuration, verification, and troubleshooting.
 
-- **🧰 Built-in Scripts**  
-  Includes essential tools for migration:
-  - `Netdisc`: Discover network devices
-  - `MAC Compare`: Identify MAC mismatches
-  - `Snapshot`: Capture device state
-  - `Replacer`: Mass configuration substitution
-  - `Ping Lite`: Lightweight reachability tests
+➕ Add Local Scripts
+Easily import and run your own Python scripts within Netmig's environment.
 
-- **🔌 Custom Script Integration**  
-  Add and run your own Python scripts within Netmig.  
-  > 📢 Want to share your script with others? Contact the admin team for publishing.
+📢 Want to share your script with others? Contact the admin team for publishing.
 
-- **🌐 Remote Script Execution**  
-  Manage and execute scripts on remote devices from within the UI.
+🌐 Remote Script Execution
+Manage and execute scripts on remote devices directly from the UI.
 
-- **📈 Telemetry & Logging**  
-  Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
+📈 Telemetry & Logging
+Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
 
 ---
 
