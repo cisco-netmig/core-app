@@ -10,6 +10,7 @@ import sys
 import os
 import platform
 import shutil
+import json
 import re
 import logging
 import ctypes
@@ -53,10 +54,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.app = QtWidgets.QApplication.instance()
         self.app.ensure_directories_files()
 
-        self.app_info = self.app.registry.get_object("app")
         self.cache = self.app.registry.get_object("cache")
         self.settings = self.app.registry.get_object("settings")
         self.sessions = self.app.registry.get_object("sessions")
+
+        self.cache["app_info"] = json.load(open(sys.modules["utils"].PATH_APP_DATA))
+        self.cache["app_info"]["readme"] = open(os.path.join(sys.modules["utils"].PATH_APP_DIR, "README.md"),
+                                                encoding="utf-8").read()
+        self.cache["app_info"]["license"] = open(os.path.join(sys.modules["utils"].PATH_APP_DIR, "LICENSE.txt")).read()
 
         if not self.settings.get("output_dir"):
             self.settings["output_dir"] = sys.modules["utils"].PATH_SCRIPT_OUTPUTS_DIR
@@ -188,7 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
             f'QPushButton {{color:{self.logger_dock.format_colors.get(logging_level)};}}')
         self.status_bar.stream_button.setText(self.settings.get("logging_stream"))
         self.status_bar.telemetry_button.setText("Active" if self.settings.get("telemetry_enabled") else "Inactive")
-        self.status_bar.version_button.setText(f"Version {self.app_info['version']}")
+        self.status_bar.version_button.setText(f"Version {self.cache['app_info']['version']}")
         logging.debug("Status bar logging stream and version set.")
 
     def setup_events(self):

@@ -47,8 +47,7 @@ def main():
     app.registry = utils.Registry(utils.PATH_USER_DIR)
     logging.info("Registry initialized and attached to application.")
 
-    # Register paths for app_info, settings, sessions, and cache data
-    app.registry.register('app', utils.PATH_APP_DATA)
+    # Register paths for settings, sessions, and cache data
     app.registry.register('settings')
     app.registry.register('sessions')
     app.registry.register('cache')

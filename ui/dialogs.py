@@ -369,7 +369,7 @@ class ShowAbout(QtWidgets.QDialog):
         """
         self.setWindowFlags(self.windowFlags() ^ QtCore.Qt.WindowType.WindowContextHelpButtonHint)
         self.setObjectName("ShowAbout")
-        self.setFixedSize(610, 440)
+        self.setFixedSize(600, 700)
         logging.debug("ShowAbout window configuration complete.")
 
     def setup_ui(self):
@@ -406,7 +406,7 @@ class ShowAbout(QtWidgets.QDialog):
         """
         logging.debug("Setting up top widget of ShowAbout dialog.")
         top_layout = QtWidgets.QHBoxLayout()
-        self.layout.addLayout(top_layout)
+        self.layout.addLayout(top_layout, stretch=3)
         top_layout.setContentsMargins(10, 10, 10, 10)
         top_layout.setSpacing(50)
 
@@ -424,11 +424,11 @@ class ShowAbout(QtWidgets.QDialog):
         info_layout.setSpacing(15)
 
         # Name, version, copyright, and Git link
-        name_label = QtWidgets.QLabel(self.mainwindow.app_info["title"])
-        version_label = QtWidgets.QLabel(f"Version {self.mainwindow.app_info['version']}")
-        copyright_label = QtWidgets.QLabel(self.mainwindow.app_info["copyright"])
+        name_label = QtWidgets.QLabel(self.mainwindow.cache['app_info']["title"])
+        version_label = QtWidgets.QLabel(f"Version {self.mainwindow.cache['app_info']['version']}")
+        copyright_label = QtWidgets.QLabel(self.mainwindow.cache['app_info']["copyright"])
         git_link_label = QtWidgets.QLabel(
-            f"<a href=\"{self.mainwindow.app_info['git']}\">{self.mainwindow.app_info['git']}</a>")
+            f"<a href=\"{self.mainwindow.cache['app_info']['git']}\">{self.mainwindow.cache['app_info']['git']}</a>")
         git_link_label.setOpenExternalLinks(True)
 
         info_layout.addWidget(name_label)
@@ -448,15 +448,14 @@ class ShowAbout(QtWidgets.QDialog):
         """
         logging.debug("Setting up tabs in ShowAbout dialog.")
         tab_widget = QtWidgets.QTabWidget()
-        self.layout.addWidget(tab_widget)
-        tab_widget.setFixedSize(600, 200)
+        self.layout.addWidget(tab_widget, stretch=7)
 
         # About tab
         about_tab = QtWidgets.QWidget()
         about_layout = QtWidgets.QVBoxLayout(about_tab)
         about_layout.setContentsMargins(5, 5, 5, 5)
         about_text_edit = QtWidgets.QTextEdit(about_tab)
-        about_text_edit.setHtml(sys.modules["utils"].md_to_html(self.mainwindow.app_info['readme']))
+        about_text_edit.setHtml(sys.modules["utils"].md_to_html(self.mainwindow.cache['app_info']['readme']))
         about_layout.addWidget(about_text_edit)
         tab_widget.addTab(about_tab, "About")
 
@@ -465,7 +464,7 @@ class ShowAbout(QtWidgets.QDialog):
         license_layout = QtWidgets.QVBoxLayout(license_tab)
         license_layout.setContentsMargins(5, 5, 5, 5)
         license_text_edit = QtWidgets.QTextEdit(license_tab)
-        license_text_edit.setText(self.mainwindow.app_info['license'])
+        license_text_edit.setText(self.mainwindow.cache['app_info']['license'])
         license_layout.addWidget(license_text_edit)
         tab_widget.addTab(license_tab, "License")
 
@@ -554,7 +553,7 @@ class CheckUpdates(QtWidgets.QDialog):
         self.setObjectName("CheckUpdates")
         self.setWindowIcon(self.mainwindow.icons['cloud-sync'])
         self.setWindowTitle('Updates')
-        self.setFixedSize(QtCore.QSize(300, 85))
+        self.setFixedSize(300, 85)
 
     def setup_ui(self):
         """Initializes the UI layout and widgets."""
@@ -602,7 +601,7 @@ class CheckUpdates(QtWidgets.QDialog):
         """Start thread to check the latest version from GitHub."""
         logging.debug("Checking for updates from GitHub.")
         self.text_edit.setText('Checking for updates...')
-        git_url = f'{self.mainwindow.app_info["git"]}/blob/master/__app__?raw=true'
+        git_url = f"{self.mainwindow.cache['app_info']['git']}/blob/master/__app__?raw=true"
         self.threads['check_version'] = sys.modules["ui"].CheckGitVersion(git_url)
         self.threads['check_version'].version_signal.connect(self._on_git_version_received)
         self.threads['check_version'].message_signal.connect(self.text_edit.setText)
@@ -611,7 +610,7 @@ class CheckUpdates(QtWidgets.QDialog):
     def _on_git_version_received(self, git_version):
         """Handles the received git version and displays the appropriate status."""
         logging.debug(f"Received git version: {git_version}")
-        local_version = version.parse(self.mainwindow.app_info["version"])
+        local_version = version.parse(self.mainwindow.cache['app_info']["version"])
         remote_version = version.parse(git_version)
 
         if local_version < remote_version:
@@ -632,7 +631,7 @@ class CheckUpdates(QtWidgets.QDialog):
     def _get_requirements(self):
         """Fetch updated requirements.txt from the repo."""
         logging.debug("Fetching requirements.txt from GitHub.")
-        req_url = f'{self.mainwindow.app_info["git"]}/blob/master/requirements.txt?raw=true'
+        req_url = f"{self.mainwindow.cache['app_info']['git']}/blob/master/requirements.txt?raw=true"
         self.threads['requirements'] = sys.modules["ui"].GetRequirements(req_url)
         self.threads['requirements'].message_signal.connect(self.text_edit.setText)
         self.threads['requirements'].finished.connect(self._download_repo)
@@ -641,7 +640,7 @@ class CheckUpdates(QtWidgets.QDialog):
     def _download_repo(self):
         """Download and extract the latest repo from GitHub."""
         logging.info("Starting repository download.")
-        zip_url = f'{self.mainwindow.app_info["git"]}/zipball/master/'
+        zip_url = f"{self.mainwindow.cache['app_info']['git']}/zipball/master/"
         self.text_edit.setText("Downloading update...")
         self.threads['download_repo'] = sys.modules["ui"].DownloadRepo(
             zip_url,
