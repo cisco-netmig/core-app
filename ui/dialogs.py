@@ -456,7 +456,7 @@ class ShowAbout(QtWidgets.QDialog):
         about_layout = QtWidgets.QVBoxLayout(about_tab)
         about_layout.setContentsMargins(5, 5, 5, 5)
         about_text_edit = QtWidgets.QTextEdit(about_tab)
-        about_text_edit.setText(self.mainwindow.app_info['readme'])
+        about_text_edit.setHtml(sys.modules["utils"].md_to_html(self.mainwindow.app_info['readme']))
         about_layout.addWidget(about_text_edit)
         tab_widget.addTab(about_tab, "About")
 
@@ -1985,7 +1985,6 @@ class Inventory(QtWidgets.QDialog):
             script_path = self.mainwindow.cache["scripts"].get(script_id, {}).get("module", "")
             print(script_path)
             if os.path.isdir(script_path):
-
                 def on_rm_error(func, path, exc_info):
                     os.chmod(path, stat.S_IWRITE)
                     func(path)
