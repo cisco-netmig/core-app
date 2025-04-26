@@ -272,9 +272,9 @@ def install_requirements(requirements_text):
             if not line or line.startswith("#"):
                 continue
 
-            if line.startswith("git+"):
-                package_name = extract_package_name_from_git(line)
-                if package_name and package_name.lower() in installed_packages:
+            if "git+" in line:
+                package_name = line.split("@")[0].strip()
+                if package_name.lower() in installed_packages:
                     logging.info(f"{package_name} already installed, skipping git install.")
                 else:
                     missing_packages.append(line)
@@ -294,18 +294,3 @@ def install_requirements(requirements_text):
 
     except Exception as e:
         logging.error(f"Failed to install requirements: {e}")
-
-
-def extract_package_name_from_git(git_url):
-    """
-    Extracts package name from git+ URL if possible.
-    """
-    try:
-        if "#egg=" in git_url:
-            return git_url.split("#egg=")[-1]
-        else:
-            # fallback: get repo name (last part of URL without .git)
-            base = os.path.basename(git_url)
-            return base.replace(".git", "") if base.endswith(".git") else base
-    except Exception:
-        return None
