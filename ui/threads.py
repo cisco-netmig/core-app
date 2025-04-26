@@ -19,6 +19,7 @@ import re
 import requests
 import getpass
 import base64
+import tempfile
 import git
 from zipfile import ZipFile
 
@@ -414,6 +415,7 @@ class GitSync(QtCore.QThread):
                 "module": module_url,
                 "load": True,
                 **meta_data,
+                "requirements": self.fetch_requirements(module_url),
                 "readme": self.fetch_readme(module_url),
                 "icon_data": self.fetch_icon(module_url),
             }
@@ -460,6 +462,25 @@ class GitSync(QtCore.QThread):
         except Exception as e:
             logging.debug(f"[Fetch Fail: .gitmodules] {gitmodules_url}: {e}")
             return {}
+
+    def fetch_requirements(self, module_url):
+        """
+        Fetches the requirements.txt content from a script submodule.
+
+        Args:
+            module_url (str): The URL of the submodule repository.
+
+        Returns:
+            str: requirements.txt content if found, else an empty string.
+        """
+        req_url = f"{module_url}/raw/master/requirements.txt"
+        try:
+            resp = requests.get(req_url, timeout=5)
+            if resp.ok:
+                return resp.text
+        except Exception:
+            pass
+        return ""
 
     def fetch_readme(self, module_url):
         """
@@ -542,12 +563,6 @@ class GitInstaller(QtCore.QThread):
         self.script_data = script_data
 
     def run(self):
-        """
-        Executes the clone or pull operation for the specified Git repository.
-        If the repository already exists, it pulls the latest changes;
-        otherwise, it clones the repository into the designated scripts directory.
-        Emits the result using the `finished` signal.
-        """
         repo_url = self.script_data.get("module")
         script_name = self.script_data.get("name")
         repo_name = repo_url.rstrip("/").split("/")[-1]
@@ -564,7 +579,31 @@ class GitInstaller(QtCore.QThread):
                 git.Repo.clone_from(repo_url, script_path)
                 logging.info(f"Successfully installed script {script_name}")
 
+            requirements_text = self.script_data.get("requirements", "").strip()
+            if requirements_text:
+                logging.debug(f"Installing requirements for {script_name}")
+                self.install_requirements(requirements_text)
+
             self.finished.emit(True, script_name, "")
         except Exception as e:
             logging.error(f"Failed to install/update script {script_name}: {e}")
             self.finished.emit(False, script_name, str(e))
+
+    def install_requirements(self, requirements_text):
+        """
+        Installs Python packages listed in the requirements text.
+
+        Args:
+            requirements_text (str): Contents of requirements.txt
+        """
+        try:
+            with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix=".txt") as tmp_req_file:
+                tmp_req_file.write(requirements_text)
+                tmp_req_file.flush()
+                temp_path = tmp_req_file.name
+
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
+
+            logging.info("Requirements installed successfully.")
+        except Exception as e:
+            logging.error(f"Failed to install requirements: {e}")
