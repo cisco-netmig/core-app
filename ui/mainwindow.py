@@ -48,7 +48,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def setup_env(self, scan_scripts):
         """
-        Prepare environment paths, output directory, and import custom modules.
+        Prepare environment paths, output directory, and scan scripts.
         """
         logging.debug("Ensuring directories and reading registry objects.")
         self.app = QtWidgets.QApplication.instance()
@@ -67,12 +67,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.settings["output_dir"] = sys.modules["utils"].PATH_SCRIPT_OUTPUTS_DIR
         sys.modules["utils"].ensure_directories_exist([self.settings.get("output_dir")])
         logging.debug(f"Output directory set: {self.settings['output_dir']}")
-
-        for path in self.settings.get("sys_paths"):
-            abs_path = os.path.abspath(path)
-            sys.path.append(abs_path)
-            sys.modules["utils"].import_from_path(os.path.basename(path), abs_path)
-        logging.debug(f"System paths imported: {self.settings.get('sys_paths')}")
 
         if scan_scripts:
             self.scan_scripts()
@@ -182,8 +176,11 @@ class MainWindow(QtWidgets.QMainWindow):
             for script_id in self.cache["scripts"]:
                 self.cache["scripts"][script_id].update(load=True)
 
-        # self.app.start_git_sync()
-        # self.app.start_scp_sync()
+        self.sync_code_sources()
+
+    def sync_code_sources(self):
+        self.app.start_git_sync()
+        self.app.start_scp_sync()
 
     def apply_settings(self):
         logging_level = self.settings.get("logging_level")
@@ -197,6 +194,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.status_bar.telemetry_button.setText("Active" if self.settings.get("telemetry_enabled") else "Inactive")
         self.status_bar.version_button.setText(f"Version {self.cache['app_info']['version']}")
         logging.debug("Status bar logging stream and version set.")
+
+        self.logger_dock.set_telemetry_logger()
 
     def setup_events(self):
         """

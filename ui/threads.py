@@ -284,64 +284,6 @@ class WaitRestart(QtCore.QThread):
         self._is_running = False
 
 
-class CheckAuthentication(QtCore.QThread):
-    """
-    CheckAuthentication is a QThread that attempts to authenticate to a remote device
-    using Netmiko and updates a QLabel with the authentication status.
-
-    This class is useful for non-blocking UI operations when testing SSH credentials.
-
-    Attributes:
-        ip (str): IP address of the remote device.
-        username (str): SSH username.
-        password (str): SSH password.
-        msg_label (QLabel): QLabel to display authentication status.
-    """
-
-    def __init__(self, ip, username, password, msg_label):
-        """
-        Initialize the thread with target device credentials and UI label.
-
-        Args:
-            ip (str): IP address of the remote device.
-            username (str): Username for SSH login.
-            password (str): Password for SSH login.
-            msg_label (QLabel): QLabel instance to display authentication messages.
-        """
-        super().__init__()
-        self.ip = ip
-        self.username = username
-        self.password = password
-        self.msg_label = msg_label
-
-    def run(self):
-        """
-        Executes the authentication check in a separate thread.
-
-        Uses Netmiko to attempt an SSH connection and updates the QLabel
-        with success or failure status.
-        """
-        self.msg_label.setText("Authenticating...")
-
-        try:
-            from netmiko import ConnectHandler
-
-            logging.debug(f"Attempting authentication to {self.ip}")
-            ConnectHandler(
-                ip=self.ip,
-                username=self.username,
-                password=self.password,
-                device_type="linux"
-            )
-            self.msg_label.setText("Success !!")
-            self.msg_label.setStyleSheet("color:green")
-            logging.info("Authentication successful.")
-        except Exception as err:
-            self.msg_label.setText("Failed !!")
-            self.msg_label.setStyleSheet("color:red")
-            logging.error(f"Authentication failed: {err}")
-
-
 class GitSync(QtCore.QThread):
     """
     A QThread-based class that asynchronously synchronizes remote script metadata and assets
@@ -428,7 +370,7 @@ class GitSync(QtCore.QThread):
             return {script_uuid: script_data}
 
         except Exception as e:
-            logging.error(f"[Meta Fetch Fail] {meta_url}: {e}")
+            logging.debug(f"[Meta Fetch Fail] {meta_url}: {e}")
             return None
 
     def get_submodules(self, base_url):
@@ -624,6 +566,7 @@ class ScpSync(QtCore.QThread):
         downloads key files (__meta__, README.md, requirements.txt, __icon__.ico)
         for each script, processes them, and emits the resulting script data.
         """
+
         try:
             ssh = SSHClient()
             ssh.set_missing_host_key_policy(AutoAddPolicy())

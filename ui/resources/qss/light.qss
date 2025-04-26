@@ -27,7 +27,6 @@ QStatusBar QPushButton {
     border-radius: 2px;
     text-align: center;
     color: #000000;
-    padding: 1px 5px 1px 5px;
 }
 QStatusBar QPushButton:hover {
     background-color: #dadada;

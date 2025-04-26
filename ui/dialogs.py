@@ -746,7 +746,7 @@ class Preferences(QtWidgets.QDialog):
 
         self._setup_general_tab()
         self._setup_server_tab()
-        self._setup_code_sources_tab()
+        self._setup_git_tab()
 
         # Buttons at the bottom
         buttons_widget = QtWidgets.QWidget()
@@ -855,7 +855,7 @@ class Preferences(QtWidgets.QDialog):
         self.point_combobox.addItems(map(str, sizes))
 
     def _setup_server_tab(self):
-        """Setup the repository server configuration tab."""
+        """Setup the SCP server configuration tab."""
 
         server_tab = QtWidgets.QWidget()
         self.tab_widget.addTab(server_tab, "SCP Server")
@@ -873,7 +873,7 @@ class Preferences(QtWidgets.QDialog):
 
         sync_button = QtWidgets.QPushButton("Sync")
         sync_button.setFixedWidth(100)
-        sync_button.clicked.connect(self.mainwindow.app.start_scp_sync)
+        sync_button.clicked.connect(self._sync_scp_server)
 
         connection_layout.addRow("IP Address", self.server_ip_edit)
         connection_layout.addRow("Path", self.server_path_edit)
@@ -881,33 +881,50 @@ class Preferences(QtWidgets.QDialog):
         connection_layout.addRow("Password", self.server_password_edit)
         connection_layout.addRow("", sync_button)
 
-        self.server_telemetry = QtWidgets.QCheckBox("Enable telemetry")
+        self.server_telemetry = QtWidgets.QCheckBox("Enable telemetry logging")
         layout.addWidget(self.server_telemetry)
 
         layout.addStretch()
 
-    def _setup_code_sources_tab(self):
-        """Setup the code sources widget."""
-        self.env_widget = QtWidgets.QWidget()
-        self.tab_widget.addTab(self.env_widget, 'Code Sources')
-        layout = QtWidgets.QVBoxLayout(self.env_widget)
+    def _sync_scp_server(self):
+        data = {
+            "server": {
+                "ip": self.server_ip_edit.text(),
+                "path": self.server_path_edit.text(),
+                "username": self.server_username_edit.text(),
+                "password": self.server_password_edit.text()
+            }
+        }
+        self.mainwindow.settings.update(data)
+        self.mainwindow.app.start_scp_sync()
 
-        git_remotes_box = QtWidgets.QGroupBox('Git Remotes')
+    def _setup_git_tab(self):
+        """Setup the Git repos widget."""
+
+        self.git_widget = QtWidgets.QWidget()
+        self.tab_widget.addTab(self.git_widget, 'Git Repositories')
+        layout = QtWidgets.QVBoxLayout(self.git_widget)
+
+        git_remotes_box = QtWidgets.QGroupBox('URLs')
         layout.addWidget(git_remotes_box)
         git_remotes_layout = QtWidgets.QVBoxLayout(git_remotes_box)
         self.git_remotes_text = QtWidgets.QTextEdit()
+        self.git_remotes_text.setFixedHeight(200)
         git_remotes_layout.addWidget(self.git_remotes_text)
 
         sync_button = QtWidgets.QPushButton("Sync")
         sync_button.setFixedWidth(100)
-        sync_button.clicked.connect(self.mainwindow.app.start_git_sync)
+        sync_button.clicked.connect(self._sync_git)
         git_remotes_layout.addWidget(sync_button)
 
-        sys_paths_box = QtWidgets.QGroupBox('System Paths')
-        layout.addWidget(sys_paths_box)
-        sys_paths_layout = QtWidgets.QVBoxLayout(sys_paths_box)
-        self.sys_paths_text = QtWidgets.QTextEdit()
-        sys_paths_layout.addWidget(self.sys_paths_text)
+        layout.addStretch()
+
+    def _sync_git(self):
+        data = {
+            "git_remotes": self.git_remotes_text.toPlainText().splitlines(),
+        }
+        self.mainwindow.settings.update(data)
+        self.mainwindow.app.start_git_sync()
 
     def set_scripts_output_dir(self):
         """
@@ -931,7 +948,6 @@ class Preferences(QtWidgets.QDialog):
         self.point_combobox.setCurrentText(str(settings_data["styling"]["font"]["pointSize"]))
         self.logging_level_combobox.setCurrentText(settings_data["logging_level"])
         self.load_all_scripts_checkbox.setChecked(settings_data["load_all_scripts"])
-        self.sys_paths_text.setText("\n".join(settings_data["sys_paths"]))
         self.server_telemetry.setChecked(settings_data["telemetry_enabled"])
         self.server_ip_edit.setText(settings_data["server"]["ip"])
         self.server_path_edit.setText(settings_data["server"]["path"])
@@ -958,7 +974,6 @@ class Preferences(QtWidgets.QDialog):
             },
             "logging_level": self.logging_level_combobox.currentText(),
             "load_all_scripts": self.load_all_scripts_checkbox.isChecked(),
-            "sys_paths": self.sys_paths_text.toPlainText().splitlines(),
             "telemetry_enabled": self.server_telemetry.isChecked(),
             "server": {
                 "ip": self.server_ip_edit.text(),

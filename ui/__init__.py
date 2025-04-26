@@ -64,7 +64,6 @@ from .threads import (
     GetRequirements,
     DownloadRepo,
     WaitRestart,
-    CheckAuthentication,
     GitSync,
     GitInstaller,
     ScpSync,

@@ -161,11 +161,14 @@ class Application(QtWidgets.QApplication):
         Once the synchronization is complete, the `on_sync_complete` callback is invoked.
 
         """
-        logging.info("Git synchronizing...")
+
         self.cache = self.registry.get_object('cache')
 
         if not self.settings.get("git_remotes"):
             return
+
+
+        logging.info("Git synchronizing...")
 
         self.git_sync_thread = sys.modules["ui"].GitSync(self.settings.get("git_remotes"), self.cache.get("scripts"))
         self.git_sync_thread.script_data_chunk.connect(self.update_cache)
@@ -179,15 +182,15 @@ class Application(QtWidgets.QApplication):
         This method initializes an ScpSync thread and starts the synchronization process.
         Once the synchronization is complete, the `on_sync_complete` callback is invoked.
         """
-        logging.info("SCP synchronizing...")
+
         self.cache = self.registry.get_object('cache')
 
         scp_config = self.settings.get("server")
 
-        if not scp_config:
-            logging.error("SCP settings are incomplete. Cannot start SCP sync.")
+        if not scp_config["ip"]:
             return
 
+        logging.info("SCP synchronizing...")
         self.scp_sync_thread = sys.modules["ui"].ScpSync(
             scp_config=scp_config,
             local_cache=self.cache.get("scripts")

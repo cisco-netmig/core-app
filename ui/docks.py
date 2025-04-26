@@ -266,10 +266,10 @@ class LoggerDock(QtWidgets.QDockWidget):
 
         if telemetry_enabled:
             self.logger.addHandler(self.telemetry_handler)
-            logging.info("Telemetry logging enabled")
+            logging.debug("Telemetry logging enabled")
         else:
             self.logger.removeHandler(self.telemetry_handler)
-            logging.info("Telemetry logging disabled")
+            logging.debug("Telemetry logging disabled")
 
     def savings_Level(self, message, *args, **kwargs):
         """
@@ -361,7 +361,7 @@ class ScriptsDock(QtWidgets.QDockWidget):
         )
         self.setWindowTitle('Scripts')
         self.setObjectName('ScriptsDock')
-        self.setMinimumHeight(690)
+        self.setMinimumHeight(685)
 
         # Set up the UI and initialize script orchestration
         self.setup_ui()

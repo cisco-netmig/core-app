@@ -32,10 +32,22 @@ class StatusBar(QtWidgets.QStatusBar):
         super().__init__(mainwindow)
         self.mainwindow = mainwindow
 
+        # Sync code soures button
+        self.sync_button = QtWidgets.QPushButton("Sync", parent=self)
+        self.sync_button.setIcon(self.mainwindow.icons['sync-grey'])
+        self.sync_button.setIconSize(QtCore.QSize(16, 16))
+        self.sync_button.setToolTip('Sync Code Sources')
+        self.sync_button.setFixedWidth(70)
+        self.sync_button.setFixedHeight(25)
+        self.sync_button.clicked.connect(self.mainwindow.sync_code_sources)
+        self.addPermanentWidget(self.sync_button)
+
         # Stream toggle button
         self.stream_button = QtWidgets.QPushButton(self)
         self.stream_button.setIcon(self.mainwindow.icons['stream-grey'])
         self.stream_button.setIconSize(QtCore.QSize(16, 16))
+        self.stream_button.setFixedWidth(100)
+        self.stream_button.setFixedHeight(25)
         self.stream_button.setToolTip('Toggle Stream')
         self.stream_button.clicked.connect(self.toggle_stream)
         self.addPermanentWidget(self.stream_button)
@@ -45,6 +57,8 @@ class StatusBar(QtWidgets.QStatusBar):
         self.telemetry_button.setIcon(self.mainwindow.icons['telemetry-grey'])
         self.telemetry_button.setIconSize(QtCore.QSize(16, 16))
         self.telemetry_button.setToolTip('Toggle Telemetry')
+        self.telemetry_button.setFixedWidth(80)
+        self.telemetry_button.setFixedHeight(25)
         self.telemetry_button.clicked.connect(self.toggle_telemetry)
         self.addPermanentWidget(self.telemetry_button)
 
@@ -53,13 +67,18 @@ class StatusBar(QtWidgets.QStatusBar):
         self.logging_button.setIcon(self.mainwindow.icons['logging-grey'])
         self.logging_button.setIconSize(QtCore.QSize(16, 16))
         self.logging_button.setToolTip('Logging')
+        self.logging_button.setFixedWidth(70)
+        self.logging_button.setFixedHeight(25)
         self.addPermanentWidget(self.logging_button)
 
         # Version display
         self.version_button = QtWidgets.QPushButton(self)
         self.version_button.setIcon(self.mainwindow.icons['version-grey'])
         self.version_button.setIconSize(QtCore.QSize(16, 16))
+        self.version_button.setFixedWidth(120)
+        self.version_button.setFixedHeight(25)
         self.addPermanentWidget(self.version_button)
+
 
     def toggle_stream(self):
         """
