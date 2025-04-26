@@ -1,0 +1,9 @@
+pyqt5
+pyqtchart
+pythonping
+netmiko
+xlsxwriter
+xlrd
+requests
+darkdetect
+markdown

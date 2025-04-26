@@ -1,0 +1,28 @@
+{
+    "styling": {
+        "theme": "System",
+        "style": "Fusion",
+        "font": {
+            "family": "Segoe UI",
+            "pointSize": 10
+        }
+    },
+    "logging_level": "INFO",
+    "logging_stream": "QStream",
+    "telemetry_enabled": false,
+    "server_repo_enabled": false,
+    "server": {
+        "ip": "",
+        "path": "",
+        "username": "",
+        "password": ""
+    },
+    "git_remotes": [
+        "https://wwwin-github.cisco.com/sanjeekr/netmig-scripts"
+    ],
+    "load_all_scripts": true,
+    "output_dir": "",
+    "sys_paths": [],
+    "repositories": [],
+    "app_state": {}
+}

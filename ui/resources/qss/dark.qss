@@ -1,0 +1,555 @@
+
+/*--------------------------------------------------QMainWindow--------------------------------------------------*/
+QMainWindow {
+    background-color: #28282b;
+}
+/*--------------------------------------------------QDialog--------------------------------------------------*/
+QDialog {
+    background-color: #28282b;
+}
+/*--------------------------------------------------QMenuBar--------------------------------------------------*/
+QMenuBar {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+QMenuBar:item:selected {
+    background-color: #e5e4e2;
+    color: #ffffff;
+}
+/*--------------------------------------------------QMenu--------------------------------------------------*/
+QMenu {
+    background-color: #2b2b2b;
+    color: #ffffff;
+}
+QMenu:item:selected {
+    background-color: #e5e4e2;
+    color: #ffffff;
+}
+/*--------------------------------------------------QMessageBox--------------------------------------------------*/
+QMessageBox QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+QMessageBox QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+/*--------------------------------------------------QToolBar--------------------------------------------------*/
+QToolBar {
+    background-color: #28282b;
+    spacing: 5px;
+    padding: 10px;
+}
+QToolButton {
+    padding: 2px;
+}
+/*--------------------------------------------------QLineEdit--------------------------------------------------*/
+QLineEdit {
+    min-height: 20px;
+}
+/*--------------------------------------------------QStatusBar--------------------------------------------------*/
+QStatusBar QWidget{
+    color: #ffffff;
+}
+QStatusBar {
+    color: #ffffff;
+}
+QStatusBar QPushButton {
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    padding: 1px 5px 1px 5px;
+}
+QStatusBar QPushButton:hover {
+    background-color: #153d64;
+}
+/*--------------------------------------------------QScrollBar--------------------------------------------------*/
+QScrollBar {
+    width: 10px;
+}
+/*--------------------------------------------------ScriptsDock--------------------------------------------------*/
+#ScriptsDock {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#ScriptsDock::title {
+    background-color: #1e1e1e;
+    font-weight: 500;
+    color: #ffffff;
+    padding: 2px;
+}
+#ScriptsDock QWidget {
+    color: #ffffff;
+    background-color: transparent;
+}
+#ScriptsDock QListWidget {
+    background-color: #343434;
+    outline: none;
+}
+#ScriptsDock QListWidget::item {
+    border: none;
+    background: transparent;
+    outline: none;
+}
+#ScriptsDock QListWidget::item:selected {
+    background: transparent;
+    border: none;
+    outline: none;
+}
+#ScriptsDock QListWidget::item:hover {
+    background: transparent;
+    outline: none;
+}
+#ScriptsDock QFrame{
+    border: none;
+}
+#ScriptsDock QLineEdit {
+    font-weight: 300;
+    padding: 2px;
+    border: 1px solid #b9b9b9;
+    background-color: #28282b;
+}
+#ScriptsDock QPushButton {
+    border:none;
+    text-align: left;
+}
+#ScriptsDock QLabel {
+    background-color: none;
+    border:none;
+    color: #ffffff;
+}
+
+/*--------------------------------------------------PropsDock--------------------------------------------------*/
+#PropsDock {
+    background-color: transparent;
+    color: #ffffff;
+}
+#PropsDock::title {
+    background-color: #1e1e1e;
+    font-weight: 500;
+    color: #ffffff;
+    padding: 2px;
+}
+#PropsDock QWidget {
+    background-color: #343434;
+    color: #ffffff;
+}
+#PropsDock QFrame{
+    border: none;
+}
+#PropsDock QPushButton {
+    border:none;
+    text-align: left;
+    font-weight: 500;
+}
+#PropsDock QLabel {
+    font-weight: 300;
+}
+#PropsDock QTextEdit {
+    text-align: left;
+    font-weight: 300;
+}
+
+/*--------------------------------------------------LoggerDock--------------------------------------------------*/
+#LoggerDock {
+    background-color: transparent;
+    color: #ffffff;
+}
+#LoggerDock::title {
+    background-color: #1e1e1e;
+    font-weight: 500;
+    color: #ffffff;
+    padding: 2px;
+}
+#LoggerDock QFrame{
+    border: none;
+}
+#LoggerDock QTextEdit {
+    text-align: left;
+    font-weight: 300;
+    background-color: #343434;
+    color: #ffffff;
+}
+
+/*--------------------------------------------------RunnerDock--------------------------------------------------*/
+#RunnerDock {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#RunnerDock::title {
+    background-color: #1e1e1e;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: center;
+    padding: 2px;
+}
+#RunnerDock QWidget {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#RunnerDock QFrame{
+    border: none;
+}
+#RunnerDock QGroupBox{
+    font-weight: 500;
+}
+#RunnerDock QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    padding: 3px;
+}
+#RunnerDock QPushButton:hover {
+    border: 1px solid #b9b9b9;
+}
+#RunnerDock QComboBox {
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+    color: #ffffff;
+    padding: 2px;
+}
+#RunnerDock QTextEdit {
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+    color: #ffffff;
+    font-weight: 300;
+}
+#RunnerDock QLineEdit {
+    font-weight: 300;
+    padding: 2px;
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+}
+#RunnerDock QHeaderView::section {
+    background-color: #343434;
+    color: #ffffff;
+    text-align: left;
+    border: 1px solid #b9b9b9;
+    font-weight: 400;
+}
+#RunnerDock QTableView {
+    outline:none;
+    gridline-color: #b9b9b9;
+}
+#RunnerDock QTableView::item:!selected:focus {
+    background:transparent;
+}
+/*--------------------------------------------------CliForm--------------------------------------------------*/
+#CliForm QPushButton {
+    background-color: #153f64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+#CliForm QPushButton:hover {
+    border: 1px solid #0070C0;
+    color: #ffffff;
+}
+/*--------------------------------------------------Preferences--------------------------------------------------*/
+#Preferences QWidget {
+    background-color: #28282b;
+    color: #ffffff;
+    font-weight: 400;
+}
+#Preferences QGroupBox{
+    font-weight: 500;
+    color: #ffffff;
+}
+#Preferences QPushButton {
+    background-color: #153f64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+#Preferences QPushButton:hover {
+    border: 1px solid #0070C0;
+    color: #ffffff;
+}
+#Preferences QComboBox {
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+    padding: 2px;
+    min-height: 25px;
+}
+#Preferences QLineEdit {
+    padding: 2px;
+    border: 1px solid #b9b9b9;
+    background-color: transparent;
+    color: none;
+}
+#Preferences QLineEdit:enabled {
+    color: #ffffff;
+}
+#Preferences QTextEdit {
+    border: 1px solid #b9b9b9;
+    font-weight: 300;
+}
+#Preferences QTabWidget:pane {
+    background-color: transparent;
+}
+#Preferences QTabBar:tab {
+    background-color: transparent;
+}
+#Preferences QTabBar:tab:!selected {
+    background-color: #343434;
+    color: #b9b9b9;
+}
+#Preferences QHeaderView::section {
+    background-color: #343434;
+    color: #ffffff;
+    text-align: left;
+    border: 1px solid #b9b9b9;
+}
+
+/*--------------------------------------------------NetworkSessionManager--------------------------------------------------*/
+#NetworkSessionManager QPushButton {
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    padding: 3px;
+}
+#NetworkSessionManager QPushButton:hover {
+    background-color: #153d64;
+}
+#NetworkSessionManager QListWidget {
+    background-color: #343434;
+    color: #ffffff;
+    border: none;
+    outline: none;
+}
+#NetworkSessionManager QListWidget::Item {
+    border-radius: 3px;
+    padding: 2px;
+    outline: none;
+    border: none;
+}
+#NetworkSessionManager QListWidget::Item:selected {
+    background-color: rgba(80, 232, 255, 50);
+    color: #ffffff;
+    border: none;
+    outline: none;
+}
+#NetworkSessionManager QListWidget::Item:hover {
+    background-color: rgba(80, 232, 255, 50);
+}
+#NetworkSessionManager QGroupBox{
+    font-weight: 500;
+    color: #ffffff;
+}
+#NetworkSessionManager QCheckBox {
+    color: #ffffff;
+}
+#NetworkSessionManager QLabel {
+    color: #ffffff;
+}
+#NetworkSessionManager QLineEdit {
+    background-color: transparent;
+    font-weight: 300;
+    padding: 2px;
+    border: 1px solid #b9b9b9;
+}
+#NetworkSessionManager QLineEdit:enabled {
+    color: #ffffff;
+}
+#NetworkSessionManagerActionWidget QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+#NetworkSessionManagerActionWidget QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+
+/*--------------------------------------------------SetNetworkSession--------------------------------------------------*/
+#SetNetworkSession QWidget {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#SetNetworkSession QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 30px;
+}
+#SetNetworkSession QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+#SetNetworkSession QComboBox {
+    background-color: transparent;
+    border: 1px solid #b9b9b9;
+    padding: 4px;
+}
+/*--------------------------------------------------CheckUpdates--------------------------------------------------*/
+#CheckUpdates QFrame{
+    border: none;
+}
+#CheckUpdates QTextEdit {
+    text-align: left;
+    font-weight: 300;
+    background-color: transparent;
+    color: #ffffff;
+}
+#CheckUpdates QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+#CheckUpdates QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+/*--------------------------------------------------ShowAbout--------------------------------------------------*/
+#ShowAbout QWidget {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#ShowAbout QFrame{
+    border: none;
+}
+#ShowAbout QTextEdit {
+    text-align: left;
+    font-weight: 300;
+}
+#ShowAbout QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-width: 100px;
+    min-height: 25px;
+}
+#ShowAbout QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+#ShowAbout QTabWidget:pane {
+    background-color: transparent;
+}
+#ShowAbout QTabBar:tab {
+    background-color: transparent;
+}
+#ShowAbout QTabBar:tab:!selected {
+    background-color: #343434;
+    color: #b9b9b9;
+}
+/*--------------------------------------------------ShowReadme--------------------------------------------------*/
+#ShowReadme QFrame{
+    border: none;
+}
+#ShowReadme QTextEdit {
+    text-align: left;
+    font-weight: 300;
+    background-color: #28282B;
+    color: #ffffff;
+}
+/*--------------------------------------------------ShowCode--------------------------------------------------*/
+#ShowCode QFrame{
+    border: none;
+}
+#ShowCode QTextEdit {
+    text-align: left;
+    font-weight: 300;
+    background-color: #28282B;
+    color: #ffffff;
+}
+#ShowCode QScrollBar {
+    background-color: transparent;
+    width: 10px;
+}
+/*--------------------------------------------------SplashScreen--------------------------------------------------*/
+#SplashScreen {
+    background-color: #28282B;
+    border-radius: 8px;
+    color: #ffffff;
+    opacity: 100;
+    font-weight: 500;
+}
+/*--------------------------------------------------Inventory--------------------------------------------------*/
+#Inventory QWidget {
+    color: #ffffff;
+    background-color: transparent;
+}
+#Inventory QFrame{
+    border: none;
+}
+#Inventory QLineEdit {
+    font-weight: 300;
+    padding: 2px;
+    border: 1px solid #b9b9b9;
+}
+#Inventory QTextEdit {
+    text-align: left;
+    font-size: 8pt;
+    background-color: #1e1e1e;
+    border-radius: 4px;
+    padding: 3px;
+}
+#Inventory QScrollBar {
+    width: 0px;
+}
+#Inventory QPushButton {
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    padding: 3px;
+}
+#Inventory QPushButton:hover {
+    background-color: #153d64;
+}
+QFrame#ScriptCard {
+    background-color: #343434;
+    border-radius: 5px;
+}
+#Inventory QMessageBox QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    padding: 3px;
+    width: 100px;
+}
+#Inventory QMessageBox QPushButton:hover {
+    border: 1px solid #0070C0;
+    color: #ffffff;
+}
+/*--------------------------------------------------AddScript--------------------------------------------------*/
+#AddScript QWidget {
+    background-color: #28282B;
+    color: #ffffff;
+}
+#AddScript QPushButton {
+    background-color: #153d64;
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    min-height: 25px;
+}
+#AddScript QPushButton:hover {
+    border: 1px solid #0070c0;
+}
+#AddScript QLineEdit {
+    font-weight: 300;
+    padding: 2px;
+    border: 1px solid #b9b9b9;
+}
+#AddScript QPushButton#BrowsePathButton {
+    background-color: none;
+}
+#AddScript QPushButton#BrowsePathButton:hover {
+    background-color: #153d64;
+    border: 1px solid #0070c0;
+}
