@@ -263,7 +263,7 @@ def install_requirements(requirements_text):
     """
     try:
         installed = subprocess.check_output([sys.executable, "-m", "pip", "freeze"]).decode().lower()
-        installed_packages = set(pkg.split("==")[0] for pkg in installed.splitlines())
+        installed_packages = set(re.split("[=@]", pkg)[0].strip() for pkg in installed.splitlines())
 
         missing_packages = []
 
@@ -272,18 +272,11 @@ def install_requirements(requirements_text):
             if not line or line.startswith("#"):
                 continue
 
-            if "git+" in line:
-                package_name = line.split("@")[0].strip()
-                if package_name.lower() in installed_packages:
-                    logging.info(f"{package_name} already installed, skipping git install.")
-                else:
-                    missing_packages.append(line)
+            package_name = re.split("[=@]", line)[0].strip()
+            if package_name.lower() in installed_packages:
+                logging.debug(f"{package_name} already installed, skipping.")
             else:
-                package_name = line.split("==")[0].strip()
-                if package_name.lower() in installed_packages:
-                    logging.debug(f"{package_name} already installed, skipping.")
-                else:
-                    missing_packages.append(line)
+                missing_packages.append(line)
 
         if missing_packages:
             logging.debug(f"Installing missing packages: {missing_packages}")

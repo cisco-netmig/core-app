@@ -521,13 +521,14 @@ class GitInstaller(QtCore.QThread):
             else:
                 logging.debug(f"Cloning repository for {script_name} from {repo_url}")
                 git.Repo.clone_from(repo_url, script_path)
-                logging.info(f"Successfully installed script {script_name}")
+
 
             requirements_text = self.script_data.get("requirements", "").strip()
             if requirements_text:
                 logging.debug(f"Installing requirements for {script_name}")
                 sys.modules["utils"].install_requirements(requirements_text)
 
+            logging.info(f"Successfully installed script {script_name}")
             self.finished.emit(True, script_name, "")
         except Exception as e:
             logging.error(f"Failed to install/update script {script_name}: {e}")
