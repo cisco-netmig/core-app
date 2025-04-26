@@ -604,6 +604,6 @@ class GitInstaller(QtCore.QThread):
 
             subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", temp_path])
 
-            logging.info("Requirements installed successfully.")
+            logging.debug("Requirements installed successfully.")
         except Exception as e:
             logging.error(f"Failed to install requirements: {e}")
