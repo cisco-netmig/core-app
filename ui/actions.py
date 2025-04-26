@@ -19,7 +19,6 @@ class ActionBuilder:
         "open_inventory": {"icon.Off": "inventory", "text": "Inventory"},
         "open_add_script": {"icon.Off": "new-file", "text": "Add Script"},
         "open_about_netmig": {"icon.Off": "netmig", "text": "About Netmig"},
-        "generate_telemetry": {"icon.Off": "event-log", "text": "Generate Telemetry"},
         "check_updates": {"icon.Off": "cloud-sync", "text": "Check for updates"},
         "exit": {"icon.Off": "exit", "text": "Exit"},
         "view_runner": {"icon.Off": "unchecked", "icon.On": "checked", "text": "Runner", "checkable": True, "checked": True},

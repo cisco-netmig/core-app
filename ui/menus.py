@@ -59,7 +59,6 @@ class MenuBuilder:
                 "separator": None
             },
             "separator_2": None,
-            "generate_telemetry": "Generate Telemetry",
             "check_updates": "Check for Updates",
             "open_about_netmig": "About Netmig"
         }
