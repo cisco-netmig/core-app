@@ -73,7 +73,7 @@ Netmig solves these problems by:
 2. **Clone and Set Up Project**
    ```bash
    mkdir Netmig && cd Netmig
-   mkdir app
+   mkdir netmig-app
    # Download and extract source into app/
    ```
 
@@ -89,12 +89,12 @@ Netmig solves these problems by:
 
 4. **Install Dependencies**
    ```bash
-   pip install -r app/utils/requirements.txt
+   pip install -r netmig-app/requirements.txt
    ```
 
 5. **Launch Netmig**
    ```bash
-   python app
+   python netmig-app
    ```
 
 ✅ That’s it! You’re ready to automate with Netmig.
