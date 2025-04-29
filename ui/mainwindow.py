@@ -184,7 +184,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def apply_settings(self):
         logging_level = self.settings.get("logging_level")
-        self.logger_dock.logger.setLevel(getattr(logging, logging_level, logging.INFO))
+        self.logger_dock.stream_handler.setLevel(getattr(logging, logging_level, logging.INFO))
         logging.debug(f"Logger level set to {logging_level}")
 
         self.status_bar.logging_button.setText(logging_level)

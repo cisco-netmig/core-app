@@ -211,7 +211,13 @@ class LoggerDock(QtWidgets.QDockWidget):
         attaches them to the main logger. It also defines a custom log level 'SAVINGS' between
         INFO and WARNING.
         """
+
+        logging.addLevelName(15, "SAVINGS")
+        setattr(logging.Logger, 'SAVINGS', 15)
+        setattr(logging.Logger, 'savings', self.savings_Level)
+
         self.logger = logging.getLogger()
+        self.logger.setLevel(15)
 
         # 🔥 Clear existing handlers to prevent duplicate output
         if self.logger.hasHandlers():
@@ -220,10 +226,6 @@ class LoggerDock(QtWidgets.QDockWidget):
         self.formatter = logging.Formatter(
             '%(asctime)s | %(levelname)s | %(pathname)s : [%(funcName)s] %(message)s',
             '%Y-%m-%d %H:%M:%S')
-
-        logging.addLevelName(15, "SAVINGS")
-        setattr(self.logger, 'SAVINGS', 15)
-        setattr(self.logger, 'savings', self.savings_Level)
 
         self.stream_handler = logging.StreamHandler(self.stdout_stream)
         self.stream_handler.setFormatter(self.formatter)
