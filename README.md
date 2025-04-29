@@ -8,19 +8,19 @@ With an emphasis on flexibility and ease of use, Netmig empowers engineers to in
 
 🚀 Key Features
 
-🖥 **Interactive GUI (Qt5)**
+🖥 **Interactive GUI (Qt5)**  
 Simplifies script execution through an intuitive interface — no more terminal commands.
 
-🧰 **Built-in Tools**
+🧰 **Built-in Tools**  
 Comes with a growing collection of preloaded scripts designed for network discovery, configuration, verification, and troubleshooting.
 
-➕ **Add Local Scripts**
+➕ **Add Local Scripts**  
 Easily import and run your own Python scripts within Netmig's environment.
 
-🌐 **Remote Script Execution**
+🌐 **Remote Script Execution**  
 Manage and execute scripts on remote devices directly from the UI.
 
-📈 **Telemetry & Logging**
+📈 **Telemetry & Logging**  
 Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
 
 ---
@@ -51,101 +51,53 @@ Netmig solves these problems by:
 
 ## ✅ Benefits & Outcomes
 
-- ✔️ Reduces human effort
-- ✔️ Unifies and streamlines script workflows[README.md](..%2F..%2F..%2F..%2FDownloads%2FREADME.md)
-- ✔️ Simplifies management of multiple scripts and devices
-- ✔️ Makes automation accessible to more team members
+- ✔️ Reduces human effort  
+- ✔️ Unifies and streamlines script workflows  
+- ✔️ Simplifies management of multiple scripts and devices  
+- ✔️ Makes automation accessible to more team members  
 - ✔️ Provides insights for continuous improvement
 
 ---
 
 ## 🛠 Getting Started
 
-## 📋 Prerequisites
+### 🔧 Installation (Quick Steps)
 
-1. **Python 3.7 or Above**  
-   Check if Python is installed:  
-   ```bash
-   python --version
-   ```  
-   If not, download it from [python.org](https://www.python.org).
+1. **Install Prerequisites**
+   - Python 3.7+ → Check with `python --version`
+   - pip → Check with `pip --version` or install:  
+     ```bash
+     python -m ensurepip --upgrade
+     ```
 
-2. **pip (Python Package Manager)**  
-   Verify installation:  
+2. **Clone and Set Up Project**
    ```bash
-   pip --version
-   ```  
-   If missing, install it with:  
-   ```bash
-   python -m ensurepip --upgrade
+   mkdir Netmig && cd Netmig
+   mkdir app
+   # Download and extract source into app/
    ```
 
----
+3. **Create Virtual Environment**
+   ```bash
+   python -m venv venv
+   # Activate it:
+   # macOS/Linux
+   source venv/bin/activate
+   # Windows
+   venv\Scripts\activate
+   ```
 
-## 🛠 Step-by-Step Installation
+4. **Install Dependencies**
+   ```bash
+   pip install -r app/utils/requirements.txt
+   ```
 
-### 1. Set Up Directory Structure
+5. **Launch Netmig**
+   ```bash
+   python app
+   ```
 
-Create the following folder layout:
-```
-Netmig/
-└── app/
-```
-
-### 2. Download the Source Code
-
-- Visit: [Netmig GitHub Repository](https://wwwin-github.cisco.com/sanjeekr/Netmig)  
-- Click the green **Code** button → **Download ZIP**  
-- Extract the ZIP contents into the `app/` directory
-
-### 3. Set Up a Virtual Environment
-
-Open a terminal and navigate to the `Netmig` directory:
-
-```bash
-python -m venv venv
-```
-
-Activate the virtual environment:
-
-- **macOS/Linux:**
-  ```bash
-  source venv/bin/activate
-  ```
-- **Windows:**
-  ```cmd
-  venv\Scripts\activate
-  ```
-
-Your directory structure should now look like:
-```
-Netmig/
-├── app/
-└── venv/
-```
-
-### 4. Install Dependencies
-
-Install required Python packages:
-
-```bash
-pip install -r app/utils/requirements.txt
-```
-
-### 5. Run the Netmig Tool
-
-Start the application:
-
-```bash
-python app
-```
-
----
-
-✅ **That's it!**  
-You have successfully installed and launched the **Netmig** tool.
-
----
+✅ That’s it! You’re ready to automate with Netmig.
 
 ---
 
@@ -156,7 +108,6 @@ You have successfully installed and launched the **Netmig** tool.
 Want to add a new script or tool? Fork the repo, or contact the admin team to publish a new module.
 
 ---
-
 
 ## 📄 License
 
