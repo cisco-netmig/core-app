@@ -69,6 +69,7 @@ class StatusBar(QtWidgets.QStatusBar):
         self.logging_button.setToolTip('Logging')
         self.logging_button.setFixedWidth(70)
         self.logging_button.setFixedHeight(25)
+        self.logging_button.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
         self.addPermanentWidget(self.logging_button)
 
         # Version display
@@ -77,6 +78,7 @@ class StatusBar(QtWidgets.QStatusBar):
         self.version_button.setIconSize(QtCore.QSize(16, 16))
         self.version_button.setFixedWidth(120)
         self.version_button.setFixedHeight(25)
+        self.version_button.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents, True)
         self.addPermanentWidget(self.version_button)
 
 
