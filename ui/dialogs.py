@@ -900,8 +900,6 @@ class Preferences(QtWidgets.QDialog):
         note_link.setStyleSheet("font-weight:300")
         layout.addWidget(note_link)
 
-
-
     def _sync_scp_server(self):
         data = {
             "server": {
