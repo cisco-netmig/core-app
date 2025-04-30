@@ -884,7 +884,23 @@ class Preferences(QtWidgets.QDialog):
         self.server_telemetry = QtWidgets.QCheckBox("Enable telemetry logging")
         layout.addWidget(self.server_telemetry)
 
+
         layout.addStretch()
+
+        note_text = 'Use "Netmig AdminTools" to setup and manage the SCP\nserver repository from Admin end.'
+        note_label = QtWidgets.QLabel(note_text)
+        layout.addWidget(note_label)
+
+        note_link = QtWidgets.QLabel(
+            '<a href="https://wwwin-github.cisco.com/sanjeekr/netmig-at" '
+            'style="color:#1a73e8; text-decoration:underline;">'
+            'https://wwwin-github.cisco.com/sanjeekr/netmig-at</a>'
+        )
+        note_link.setOpenExternalLinks(True)
+        note_link.setStyleSheet("font-weight:300")
+        layout.addWidget(note_link)
+
+
 
     def _sync_scp_server(self):
         data = {
