@@ -53,13 +53,13 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         logging.debug("Ensuring directories and reading registry objects.")
         self.app = QtWidgets.QApplication.instance()
+        self.cipher = self.app.cipher
         self.app.ensure_directories_files()
 
         self.cache = self.app.registry.get_object("cache")
         self.settings = self.app.registry.get_object("settings")
         self.sessions = self.app.registry.get_object("sessions")
 
-        self.cipher = sys.modules["utils"].PasswordCipher()
 
         self.cache["app_info"] = json.load(open(sys.modules["utils"].PATH_APP_DATA))
         self.cache["app_info"]["readme"] = open(os.path.join(sys.modules["utils"].PATH_APP_DIR, "README.md"),
@@ -194,7 +194,7 @@ class MainWindow(QtWidgets.QMainWindow):
         This method initiates both Git-based and SCP-based sync processes
         to ensure that the latest code is pulled and any local changes are uploaded.
         """
-        # self.app.start_git_sync()
+        self.app.start_git_sync()
         self.app.start_scp_sync()
 
     def apply_settings(self):

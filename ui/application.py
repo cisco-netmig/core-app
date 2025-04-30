@@ -31,6 +31,7 @@ class Application(QtWidgets.QApplication):
         super().__init__(sys_argv)
         self.registry = None
         self.mainwindow = None
+        self.cipher = sys.modules["utils"].PasswordCipher()
         self.ensure_directories_files()
 
     def ensure_directories_files(self):
@@ -189,7 +190,7 @@ class Application(QtWidgets.QApplication):
         if not scp_config["ip"]:
             return
 
-        scp_config["password"] = self.mainwindow.cipher.decrypt(scp_config["password"])
+        scp_config["password"] = self.cipher.decrypt(scp_config["password"])
 
         logging.info("SCP synchronizing...")
         self.scp_sync_thread = sys.modules["ui"].ScpSync(
@@ -199,6 +200,7 @@ class Application(QtWidgets.QApplication):
         self.scp_sync_thread.script_data_chunk.connect(self.update_cache)
         self.scp_sync_thread.finished.connect(lambda: logging.info("SCP synchronization complete."))
         self.scp_sync_thread.start()
+
 
     def update_cache(self, script_data):
         """

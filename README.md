@@ -1,4 +1,7 @@
-# Netmig – Automation Suite
+<p align="center">
+  <img src="ui/resources/netmigbanner.png" alt="Netmig Banner" />
+</p>
+
 
 Netmig is a powerful **graphical user interface (GUI)** tool designed to act as a centralized hub for **network migration automation**. It consolidates reusable tools and scripts into a unified platform, enabling seamless execution, monitoring, and management throughout every stage of the migration lifecycle.
 
