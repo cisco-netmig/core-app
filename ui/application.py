@@ -184,11 +184,12 @@ class Application(QtWidgets.QApplication):
         """
 
         self.cache = self.registry.get_object('cache')
-
-        scp_config = self.settings.get("server")
+        scp_config = self.settings.get("server").copy()
 
         if not scp_config["ip"]:
             return
+
+        scp_config["password"] = self.mainwindow.cipher.decrypt(scp_config["password"])
 
         logging.info("SCP synchronizing...")
         self.scp_sync_thread = sys.modules["ui"].ScpSync(

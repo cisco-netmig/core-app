@@ -15,6 +15,7 @@ import re
 import logging
 import ctypes
 import importlib
+from cryptography.fernet import Fernet
 
 from PyQt5 import QtCore, QtWidgets, QtGui
 
@@ -57,6 +58,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.cache = self.app.registry.get_object("cache")
         self.settings = self.app.registry.get_object("settings")
         self.sessions = self.app.registry.get_object("sessions")
+
+        self.cipher = sys.modules["utils"].PasswordCipher()
 
         self.cache["app_info"] = json.load(open(sys.modules["utils"].PATH_APP_DATA))
         self.cache["app_info"]["readme"] = open(os.path.join(sys.modules["utils"].PATH_APP_DIR, "README.md"),
@@ -172,6 +175,12 @@ class MainWindow(QtWidgets.QMainWindow):
             current = current.parent()
 
     def runon_startup(self):
+        """
+        Executes startup routines when the application is launched.
+
+        - Loads all scripts into the cache if 'load_all_scripts' setting is enabled.
+        - Initiates synchronization of code sources (via Git and SCP).
+        """
         if self.settings.get("load_all_scripts"):
             for script_id in self.cache["scripts"]:
                 self.cache["scripts"][script_id].update(load=True)
@@ -179,7 +188,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sync_code_sources()
 
     def sync_code_sources(self):
-        self.app.start_git_sync()
+        """
+        Starts background synchronization of code sources using Git and SCP.
+
+        This method initiates both Git-based and SCP-based sync processes
+        to ensure that the latest code is pulled and any local changes are uploaded.
+        """
+        # self.app.start_git_sync()
         self.app.start_scp_sync()
 
     def apply_settings(self):

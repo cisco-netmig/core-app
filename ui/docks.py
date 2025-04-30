@@ -217,7 +217,7 @@ class LoggerDock(QtWidgets.QDockWidget):
         setattr(logging.Logger, 'savings', self.savings_Level)
 
         self.logger = logging.getLogger()
-        self.logger.setLevel(15)
+        self.logger.setLevel(0)
 
         # 🔥 Clear existing handlers to prevent duplicate output
         if self.logger.hasHandlers():
@@ -229,6 +229,7 @@ class LoggerDock(QtWidgets.QDockWidget):
 
         self.stream_handler = logging.StreamHandler(self.stdout_stream)
         self.stream_handler.setFormatter(self.formatter)
+        self.stream_handler.setLevel(15)
 
         self.file_handler = logging.FileHandler(filename=self.logger_file)
         self.file_handler.setFormatter(self.formatter)
@@ -718,6 +719,19 @@ class RunnerDock(QtWidgets.QDockWidget):
             form = sys.modules["ui"].CliForm(self.mainwindow)
         else:
             try:
+                # Get session data if available for script_id or use default session if set
+                session = script_data.get("session")
+                if not session and self.mainwindow.sessions.get("default_session"):
+                    session = self.mainwindow.sessions.get("default_session")
+
+                session_data = {}
+                if session:
+                    session_data = self.mainwindow.sessions["sessions"].get(session).copy()
+                    session_data["JUMPHOST_PASSWORD"] = self.mainwindow.cipher.decrypt(
+                        session_data.get("JUMPHOST_PASSWORD", ""))
+                    session_data["NETWORK_PASSWORD"] = self.mainwindow.cipher.decrypt(
+                        session_data.get("NETWORK_PASSWORD", ""))
+
                 # If module has a Form attribute, instantiate it
                 if hasattr(module, 'Form') and isinstance(module.Form, (type, types.FunctionType)):
                     kwargs = {
@@ -725,7 +739,7 @@ class RunnerDock(QtWidgets.QDockWidget):
                         "icons": self.mainwindow.icons,
                         "script": script_id,
                         "output_dir": self.mainwindow.settings.get("output_dir"),
-                        "session": self.mainwindow.sessions["sessions"].get(script_data.get("session"))
+                        "session": session_data
                     }
                     form = module.Form(**kwargs)
                     logging.debug(f"Form created for script: {script_data.get('name')}")

@@ -906,7 +906,7 @@ class Preferences(QtWidgets.QDialog):
                 "ip": self.server_ip_edit.text(),
                 "path": self.server_path_edit.text(),
                 "username": self.server_username_edit.text(),
-                "password": self.server_password_edit.text()
+                "password": self.mainwindow.cipher.encrypt(self.server_password_edit.text())
             }
         }
         self.mainwindow.settings.update(data)
@@ -966,7 +966,7 @@ class Preferences(QtWidgets.QDialog):
         self.server_ip_edit.setText(settings_data["server"]["ip"])
         self.server_path_edit.setText(settings_data["server"]["path"])
         self.server_username_edit.setText(settings_data["server"]["username"])
-        self.server_password_edit.setText(settings_data["server"]["password"])
+        self.server_password_edit.setText(self.mainwindow.cipher.decrypt(settings_data["server"]["password"]))
         self.git_remotes_text.setText("\n".join(settings_data["git_remotes"]))
 
         logging.debug("Preferences data loaded successfully.")
@@ -993,10 +993,11 @@ class Preferences(QtWidgets.QDialog):
                 "ip": self.server_ip_edit.text(),
                 "path": self.server_path_edit.text(),
                 "username": self.server_username_edit.text(),
-                "password": self.server_password_edit.text()
+                "password": self.mainwindow.cipher.encrypt(self.server_password_edit.text())
             },
             "git_remotes": self.git_remotes_text.toPlainText().splitlines(),
         }
+
         self.mainwindow.settings.update(data)
         self.mainwindow.app.refresh_ui()
         logging.debug("Preferences updated and UI refreshed.")
@@ -1225,10 +1226,14 @@ class NetworkSessionManager(QtWidgets.QDialog):
         self.name_edit.setText(session.get("name", ""))
         self.jumphost_hostname_edit.setText(session.get("JUMPHOST_IP", ""))
         self.jumphost_username_edit.setText(session.get("JUMPHOST_USERNAME", ""))
-        self.jumphost_password_edit.setText(session.get("JUMPHOST_PASSWORD", ""))
+        self.jumphost_password_edit.setText(self.mainwindow.cipher.decrypt(session.get("JUMPHOST_PASSWORD", "")))
         self.network_username_edit.setText(session.get("NETWORK_USERNAME", ""))
-        self.network_password_edit.setText(session.get("NETWORK_PASSWORD", ""))
-        self.default_checkbox.setChecked(session.get("default", False))
+        self.network_password_edit.setText(self.mainwindow.cipher.decrypt(session.get("NETWORK_PASSWORD", "")))
+
+        self.default_checkbox.setChecked(False)
+        if session_id == self.mainwindow.sessions["default_session"]:
+            self.default_checkbox.setChecked(True)
+
         self.form_widget.setDisabled(True)
         self.set_action_mode('edit')
 
@@ -1257,22 +1262,17 @@ class NetworkSessionManager(QtWidgets.QDialog):
                 "name": self.name_edit.text(),
                 "JUMPHOST_IP": self.jumphost_hostname_edit.text(),
                 "JUMPHOST_USERNAME": self.jumphost_username_edit.text(),
-                "JUMPHOST_PASSWORD": self.jumphost_password_edit.text(),
+                "JUMPHOST_PASSWORD": self.mainwindow.cipher.encrypt(self.jumphost_password_edit.text()),
                 "NETWORK_USERNAME": self.network_username_edit.text(),
-                "NETWORK_PASSWORD": self.network_password_edit.text(),
-                "default": self.default_checkbox.isChecked()
+                "NETWORK_PASSWORD": self.mainwindow.cipher.encrypt(self.network_password_edit.text()),
             }
             self.mainwindow.sessions["sessions"][session_id] = data
 
             if self.default_checkbox.isChecked():
                 self.mainwindow.sessions["default_session"] = session_id
-                for _session_id, session_info in self.mainwindow.sessions.get("sessions").items():
-                    if not session_id == _session_id:
-                        self.mainwindow.sessions["sessions"][_session_id]["default"] = False
-                for script_id, script_info in self.mainwindow.cache["scripts"].items():
-                    self.mainwindow.cache["scripts"][script_id]["session"] = session_id
 
             self.load_sessions()
+            self.set_action_mode("edit")
             self.form_widget.setDisabled(True)
 
     def delete_session(self):
@@ -1959,7 +1959,9 @@ class Inventory(QtWidgets.QDialog):
         if source == "git":
             self.installer_thread = sys.modules["ui"].GitInstaller(script_data)
         elif source == "scp":
-            self.installer_thread = sys.modules["ui"].ScpInstaller(script_data, self.mainwindow.settings.get("server"))
+            scp_config = self.mainwindow.settings.get("server").copy()
+            scp_config["password"] = self.mainwindow.cipher.decrypt(scp_config["password"])
+            self.installer_thread = sys.modules["ui"].ScpInstaller(script_data, scp_config)
         else:
             logging.error(f"Unsupported source type: {source}")
             card.status_label.setText(f"Failed: Unsupported source {source}")

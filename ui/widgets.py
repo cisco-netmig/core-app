@@ -367,8 +367,19 @@ class ScriptExecutor(QtCore.QObject):
         Launches the current script in a new terminal window using platform-specific commands.
         """
         path = self.mainwindow.script_orch.curr_module_path
-        session_id = self.mainwindow.script_orch.curr_script_session
-        session_data = self.mainwindow.sessions.get("sessions").get(session_id, {})
+
+        session = self.mainwindow.script_orch.curr_script_session
+        if not session and self.mainwindow.sessions.get("default_session"):
+            session = self.mainwindow.sessions.get("default_session")
+
+        session_data = {}
+        if session:
+            session_data = self.mainwindow.sessions["sessions"].get(session).copy()
+            session_data["JUMPHOST_PASSWORD"] = self.mainwindow.cipher.decrypt(
+                session_data.get("JUMPHOST_PASSWORD", ""))
+            session_data["NETWORK_PASSWORD"] = self.mainwindow.cipher.decrypt(
+                session_data.get("NETWORK_PASSWORD", ""))
+
 
         if not path:
             logging.warning("No script loaded!")

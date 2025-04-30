@@ -6,6 +6,7 @@ import json
 import getpass
 import logging
 from paramiko import SSHClient, AutoAddPolicy
+from .cipher import PasswordCipher
 
 
 class LoggingAgent:
@@ -54,10 +55,13 @@ class LoggingAgent:
 
         self.enabled = settings.get("telemetry_enabled", False)
 
+        cipher = PasswordCipher()
+
+
         self.ip = settings.get("server")["ip"]
         self.path = os.path.join(settings.get("server")["path"], "userlogs")
         self.username = settings.get("server")["username"]
-        self.password = settings.get("server")["password"]
+        self.password = cipher.decrypt(settings.get("server")["password"])
 
     def set_connection(self):
         """

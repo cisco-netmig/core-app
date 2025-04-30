@@ -34,3 +34,4 @@ from .registry import (
 )
 from .paths import *
 from .telemetry import LoggingAgent
+from .cipher import PasswordCipher
