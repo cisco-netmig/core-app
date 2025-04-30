@@ -1269,6 +1269,9 @@ class NetworkSessionManager(QtWidgets.QDialog):
                 for _session_id, session_info in self.mainwindow.sessions.get("sessions").items():
                     if not session_id == _session_id:
                         self.mainwindow.sessions["sessions"][_session_id]["default"] = False
+                for script_id, script_info in self.mainwindow.cache["scripts"].items():
+                    self.mainwindow.cache["scripts"][script_id]["session"] = session_id
+
             self.load_sessions()
             self.form_widget.setDisabled(True)
 
