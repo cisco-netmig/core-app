@@ -1,3 +1,8 @@
+"""
+Provides secure encryption and decryption of strings using a Fernet symmetric key stored in the system keyring.
+Used to protect sensitive information such as passwords.
+"""
+
 import keyring
 import getpass
 import logging
@@ -9,7 +14,22 @@ logger = logging.getLogger(__name__)
 SERVICE_NAME = "Netmig"
 USERNAME = getpass.getuser()
 
+
 class PasswordCipher:
+    """
+    Handles encryption and decryption of sensitive data using a symmetric Fernet key,
+    which is securely stored and retrieved from the OS keyring.
+
+    Responsibilities:
+    - Automatically generates a new encryption key if one doesn't exist.
+    - Stores the key securely using the `keyring` module.
+    - Encrypts and decrypts strings using Fernet (symmetric authenticated encryption).
+    - Provides functionality to reset or regenerate the encryption key.
+
+    WARNING:
+        Resetting or regenerating the key will render any previously encrypted data unreadable.
+    """
+
     def __init__(self):
         self.key = self._get_or_create_key()
         self.fernet = Fernet(self.key.encode())
