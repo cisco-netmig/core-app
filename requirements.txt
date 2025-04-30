@@ -3,3 +3,5 @@ netmiko
 requests
 darkdetect
 markdown
+cryptography
+keyring
