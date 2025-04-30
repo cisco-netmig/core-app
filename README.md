@@ -20,6 +20,9 @@ Easily import and run your own Python scripts within Netmig's environment.
 🌐 **Remote Script Execution**  
 Manage and execute scripts on remote devices directly from the UI.
 
+🔐 **Security**  
+Netmig uses **Fernet symmetric encryption** (via the `cryptography` library) to securely store sensitive information like passwords, with encryption keys protected in the system keyring.
+
 📈 **Telemetry & Logging**  
 Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
 
