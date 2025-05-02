@@ -118,3 +118,16 @@ Want to add a new script or tool? Fork the repo, or contact the admin team to pu
 ## 📄 License
 
 MIT License © 2024 Sanjeev Krishna
+
+---
+
+## 🔗 Related Repositories
+
+- 📁 **[Netmig Scripts Repository](https://wwwin-github.cisco.com/sanjeekr/netmig-scripts)**  
+  Collection of reusable Python scripts for use with the Netmig platform.
+
+- 🛠️ **[Netmig-At (Admin Tools)](https://wwwin-github.cisco.com/sanjeekr/netmig-at)**  
+  Administrative companion tool, designed to help administrators manage script repositories, monitor user activity, and track automation savings across teams.
+
+- 🧰 **[Netcore (Python Tool-Kit)](https://wwwin-github.cisco.com/sanjeekr/netcore)**  
+  Core Python toolkit for advanced automation tasks, integrations, and extended functionality within the Netmig ecosystem.
