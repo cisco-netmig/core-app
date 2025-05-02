@@ -68,7 +68,7 @@ class Application(QtWidgets.QApplication):
         self.settings = self.registry.get_object('settings')
         self.get_theme()
 
-        qss_path = os.path.join(sys.modules["utils"].PATH_QSS_DIR, f'{self.theme}.qss')
+        qss_path = os.path.join(sys.modules["utils"].PATH_QSS_DIR, f'{self.theme}.qss'.lower())
 
         with open(qss_path, 'r') as f:
             self.setStyleSheet(f.read())
