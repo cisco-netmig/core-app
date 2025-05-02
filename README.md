@@ -106,9 +106,9 @@ Netmig solves these problems by:
 ✅ That’s it! You’re ready to automate with Netmig.
 
 ---
-## 📦 Downloads
+## 🚀 Latest Release
 
-🪟 **[Download Netmig for Windows](https://cisco-my.sharepoint.com/personal/sanjeekr_cisco_com/_layouts/15/download.aspx?UniqueId=27c37853-54f6-4384-83ec-3e09bbc29fca)**  
+🪟 **[Download Netmig for Windows](https://wwwin-github.cisco.com/sanjeekr/netmig-app/releases/tag/1.0.0)**  
 Easily install Netmig on Windows with the official installer. No Python setup required.
 
 ---
