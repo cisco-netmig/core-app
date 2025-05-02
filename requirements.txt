@@ -5,3 +5,5 @@ darkdetect
 markdown
 cryptography
 keyring
+packaging
+GitPython
