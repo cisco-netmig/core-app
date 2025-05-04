@@ -2020,7 +2020,6 @@ class Inventory(QtWidgets.QDialog):
         if confirm == QtWidgets.QMessageBox.Yes:
             # Remove script folder
             script_path = self.mainwindow.cache["scripts"].get(script_id, {}).get("module", "")
-            print(script_path)
             if os.path.isdir(script_path):
                 def on_rm_error(func, path, exc_info):
                     os.chmod(path, stat.S_IWRITE)
