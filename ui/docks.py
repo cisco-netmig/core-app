@@ -253,7 +253,7 @@ class LoggerDock(QtWidgets.QDockWidget):
             level (int): Minimum logging level to allow (e.g., logging.ERROR).
         """
         if modules is None:
-            modules = ["paramiko", "urllib3", "matplotlib", "asyncio"]
+            modules = ["paramiko", "urllib3", "matplotlib", "asyncio", "requests"]
 
         for mod in modules:
             mod_logger = logging.getLogger(mod)
