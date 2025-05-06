@@ -238,6 +238,26 @@ QScrollBar {
 #RunnerDock QTableView::item:!selected:focus {
     background:transparent;
 }
+#RunnerDock QScrollArea QWidget{
+    background-color: #343434;
+    border: none;
+}
+#RunnerDock QScrollBar:vertical {
+    background: transparent;
+    width: 12px;
+    margin: 0px;
+}
+#RunnerDock QScrollBar::handle:vertical {
+    background: #555;
+    border-radius: 6px;
+    min-height: 20px;
+}
+#RunnerDock QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0;
+}
+#RunnerDock QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
 /*--------------------------------------------------CliForm--------------------------------------------------*/
 #CliForm QPushButton {
     background-color: #153f64;
