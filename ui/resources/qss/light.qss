@@ -171,6 +171,7 @@ QStatusBar QPushButton:hover {
 #RunnerDock QLineEdit {
     font-weight: 300;
     padding: 2px;
+    border: 1px solid #b9b9b9;
 }
 #RunnerDock QHeaderView::section {
     background-color: #dadada;

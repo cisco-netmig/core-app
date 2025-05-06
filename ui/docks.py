@@ -685,7 +685,7 @@ class RunnerDock(QtWidgets.QDockWidget):
         of the dock. Each script form is loaded into a new page in this stack.
         """
         logging.debug("Setting up RunnerDock UI")
-        self.form_stack = QtWidgets.QStackedWidget()
+        self.form_stack = QtWidgets.QStackedWidget(self)
         setattr(self.form_stack, "map", {})
         self.setWidget(self.form_stack)
         logging.debug("RunnerDock UI setup complete")
