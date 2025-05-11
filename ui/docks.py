@@ -662,19 +662,49 @@ class RunnerDock(QtWidgets.QDockWidget):
 
         logging.debug("Initializing RunnerDock")
         self.setObjectName('RunnerDock')
-        self.setupUi()
+        self.setup_ui()
+
+        self.docked = True
+        self.installEventFilter(self)
+        self.topLevelChanged.connect(lambda: QtCore.QTimer.singleShot(0, self.toggle_dock_state))
+
         logging.debug("RunnerDock initialized")
 
-    def setupUi(self):
+    def setup_ui(self):
         """
-        Sets up the user interface by creating and assigning a QStackedWidget as the central widget
-        of the dock. Each script form is loaded into a new page in this stack.
+        Sets up the user interface by creating and assigning a QStackedWidget as the central widget.
+        Each script form is loaded into a new page in this stack.
         """
         logging.debug("Setting up RunnerDock UI")
         self.form_stack = QtWidgets.QStackedWidget(self)
         setattr(self.form_stack, "map", {})
         self.setWidget(self.form_stack)
         logging.debug("RunnerDock UI setup complete")
+
+    def event(self, event):
+        """Intercepts events to handle both docking and undocking actions."""
+        if event.type() == QtCore.QEvent.WindowStateChange and self.isMinimized():
+            QtCore.QTimer.singleShot(0, self.toggle_dock_state)
+            return True
+        return super().event(event)
+
+    def toggle_dock_state(self):
+        """Toggle between docked and undocked (floating) state."""
+        if self.docked:
+            self.setWindowFlags(
+                QtCore.Qt.Window |
+                QtCore.Qt.CustomizeWindowHint |
+                QtCore.Qt.WindowTitleHint |
+                QtCore.Qt.WindowMinimizeButtonHint |
+                QtCore.Qt.WindowMaximizeButtonHint |
+                QtCore.Qt.WindowCloseButtonHint
+            )
+            self.docked = False
+        else:
+            self.setParent(self.mainwindow)
+            self.mainwindow.central_layout.addWidget(self)
+            self.docked = True
+        self.showNormal()
 
     def add_script(self, script_id, script_data):
         """
