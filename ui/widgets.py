@@ -389,7 +389,8 @@ class ScriptExecutor(QtCore.QObject):
             logging.error(f"Could not find: {path}")
             return
 
-
+        qss_path = os.path.join(sys.modules["utils"].PATH_QSS_DIR, f"{self.mainwindow.app.theme.lower()}-runner.qss")
+        print(qss_path)
         args = [
             sys.executable,
             "-m",
@@ -397,7 +398,7 @@ class ScriptExecutor(QtCore.QObject):
             "--lib", json.dumps(sys.path),
             "--output", os.environ.get("NETMIG_OUTPUT_DIR", ""),
             "--session", json.dumps(session_data),
-            "--qss", self.mainwindow.app.styleSheet(),
+            "--qss", open(qss_path).read(),
             "--style", json.dumps(self.mainwindow.settings.get('styling'))
         ]
 
