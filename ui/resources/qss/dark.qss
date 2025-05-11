@@ -110,6 +110,7 @@ QScrollBar {
     padding: 2px;
     border: 1px solid #b9b9b9;
     background-color: #28282b;
+    color: #ffffff;
 }
 #ScriptsDock QPushButton {
     border:none;
