@@ -663,7 +663,6 @@ class RunnerDock(QtWidgets.QDockWidget):
         logging.debug("Initializing RunnerDock")
         self.setObjectName('RunnerDock')
         self.setup_ui()
-
         self.docked = True
         self.installEventFilter(self)
         self.topLevelChanged.connect(lambda: QtCore.QTimer.singleShot(0, self.toggle_dock_state))
@@ -699,12 +698,16 @@ class RunnerDock(QtWidgets.QDockWidget):
                 QtCore.Qt.WindowMaximizeButtonHint |
                 QtCore.Qt.WindowCloseButtonHint
             )
+            invisible_pixmap = QtGui.QPixmap(1, 1)
+            invisible_pixmap.fill(QtCore.Qt.transparent)
+            self.setWindowIcon(QtGui.QIcon(invisible_pixmap))
+            self.showMaximized()
             self.docked = False
         else:
             self.setParent(self.mainwindow)
             self.mainwindow.central_layout.addWidget(self)
+            self.showNormal()
             self.docked = True
-        self.showNormal()
 
     def add_script(self, script_id, script_data):
         """
