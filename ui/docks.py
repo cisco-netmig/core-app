@@ -54,10 +54,6 @@ class LoggerDock(QtWidgets.QDockWidget):
         """
         super().__init__(mainwindow)
         self.mainwindow = mainwindow
-        self.setFeatures(
-            QtWidgets.QDockWidget.DockWidgetFloatable |
-            QtWidgets.QDockWidget.DockWidgetMovable
-        )
         self.setWindowTitle('Logger')
         self.setObjectName('LoggerDock')
         self.setMinimumHeight(200)
@@ -357,11 +353,6 @@ class ScriptsDock(QtWidgets.QDockWidget):
 
         logging.debug("Initializing ScriptsDock...")
 
-        # Set dock properties: floatable and movable
-        self.setFeatures(
-            QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetFloatable |
-            QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetMovable
-        )
         self.setWindowTitle('Scripts')
         self.setObjectName('ScriptsDock')
         self.setMinimumHeight(685)
@@ -504,10 +495,6 @@ class PropsDock(QtWidgets.QDockWidget):
         self.mainwindow = mainwindow
 
         logging.debug("Initializing PropsDock")
-        self.setFeatures(
-            QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetFloatable |
-            QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetMovable
-        )
         self.setWindowTitle('Properties')
         self.setObjectName('PropsDock')
         self.setup_ui()
@@ -674,7 +661,6 @@ class RunnerDock(QtWidgets.QDockWidget):
         self.mainwindow = mainwindow
 
         logging.debug("Initializing RunnerDock")
-        self.setFeatures(QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetMovable)
         self.setObjectName('RunnerDock')
         self.setupUi()
         logging.debug("RunnerDock initialized")
