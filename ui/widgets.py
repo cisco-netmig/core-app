@@ -389,6 +389,7 @@ class ScriptExecutor(QtCore.QObject):
             logging.error(f"Could not find: {path}")
             return
 
+
         args = [
             sys.executable,
             "-m",
@@ -396,7 +397,7 @@ class ScriptExecutor(QtCore.QObject):
             "--lib", json.dumps(sys.path),
             "--output", os.environ.get("NETMIG_OUTPUT_DIR", ""),
             "--session", json.dumps(session_data),
-            "--qss", self.extract_style("#RunnerDock"),
+            "--qss", self.mainwindow.app.styleSheet(),
             "--style", json.dumps(self.mainwindow.settings.get('styling'))
         ]
 
@@ -445,25 +446,6 @@ class ScriptExecutor(QtCore.QObject):
 
         except Exception as e:
             logging.exception("Failed to execute script.")
-
-    def extract_style(self, object_name):
-        """
-        Extracts all QSS blocks that target a specific object name (e.g., '#RunnerDock').
-
-        Args:
-            object_name (str): The object name prefixed with '#' (e.g., '#RunnerDock').
-
-        Returns:
-            str: All matching QSS rule blocks for the specified object.
-        """
-        qss = self.mainwindow.app.styleSheet()
-        pattern = re.compile(rf'({re.escape(object_name)}[^\{{]*)\s*\{{([^{{}}]*?)\}}', re.DOTALL)
-
-        matches = pattern.findall(qss)
-
-        extracted_blocks = [f"{selector.strip()} {{\n{rules.strip()}\n}}" for selector, rules in matches]
-
-        return "\n\n".join(extracted_blocks)
 
 
 class ScriptCard(QtWidgets.QFrame):
