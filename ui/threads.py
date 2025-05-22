@@ -287,10 +287,14 @@ class WaitRestart(QtCore.QThread):
 class GitSync(QtCore.QThread):
     """
     A QThread-based class that asynchronously synchronizes remote script metadata and assets
-    from a list of Git repositories containing submodules (scripts).
+    from either a JSON file listing script repositories or a list of individual Git repository URLs.
+
+    Supports:
+    - JSON sources (containing a list of repo entries with "url")
+    - Direct Git repo URLs
 
     Emits:
-        script_data_chunk (dict): Emitted for each script UUID after its data is fetched and processed.
+        script_data_chunk (dict): Emitted for each script UUID after its metadata is fetched and processed.
     """
 
     script_data_chunk = QtCore.pyqtSignal(dict)
@@ -300,48 +304,54 @@ class GitSync(QtCore.QThread):
         Initializes the GitSync thread.
 
         Args:
-            base_urls (list[str]): List of parent repository URLs containing submodules.
+            base_urls (list[str]): A list of sources — each either a JSON file URL or a direct script repo URL.
             local_cache (dict): Dictionary of locally cached script metadata, keyed by UUID.
         """
         super().__init__()
-        self.base_urls = [url.rstrip('/') for url in base_urls]
+        self.sources = [url.rstrip('/') for url in sources]
         self.local_cache = local_cache
 
     def run(self):
         """
-        Thread entry point.
+        Entry point for the QThread.
 
-        Handles both parent repositories with submodules and direct script repositories.
+        Iterates over each source:
+        - If the source ends with `.json`, it is treated as a JSON file containing multiple script repo entries.
+        - Otherwise, it is treated as a single direct script repository URL.
+
+        For each script, metadata is fetched and emitted if valid.
         """
-        for base_url in self.base_urls:
+        for source in self.sources:
             try:
-                # Try parsing as a parent repo with submodules
-                submodules = self.get_submodules(base_url)
-
-                if submodules:
-                    for module_name, module_url in submodules.items():
-                        script_data = self.process_script(module_url)
-                        if script_data:
-                            self.script_data_chunk.emit(script_data)
+                if source.endswith(".json"):
+                    resp = requests.get(source, timeout=5)
+                    resp.raise_for_status()
+                    repos = resp.json()
+                    for entry in repos:
+                        module_url = entry.get("url")
+                        if module_url:
+                            script_data = self.process_script(module_url)
+                            if script_data:
+                                self.script_data_chunk.emit(script_data)
                 else:
-                    # If no submodules, treat the base_url as a direct script repo
-                    script_data = self.process_script(base_url)
+                    # Treat as direct script repo
+                    script_data = self.process_script(source)
                     if script_data:
                         self.script_data_chunk.emit(script_data)
 
             except Exception as e:
-                logging.error(f"[Repo Sync Fail] {base_url}: {e}")
+                logging.error(f"[Sync Error] {source}: {e}")
 
     def process_script(self, module_url):
         """
-        Fetches and processes a script's metadata, README, and icon from its remote module URL.
+        Fetches and processes a script's metadata, README, requirements, and icon from its remote Git repo.
 
         Args:
-            module_url (str): The URL of the submodule repository.
+            module_url (str): The base URL of the script repository.
 
         Returns:
-            dict or None: A dictionary keyed by script UUID containing script metadata,
-                          or None if the fetch fails or UUID is missing.
+            dict or None: A dictionary keyed by script UUID containing full script metadata,
+                          or None if fetching or parsing fails.
         """
         meta_url = f"{module_url}/raw/master/__meta__"
         try:
@@ -373,49 +383,15 @@ class GitSync(QtCore.QThread):
             logging.debug(f"[Meta Fetch Fail] {meta_url}: {e}")
             return None
 
-    def get_submodules(self, base_url):
-        """
-        Fetches and parses the `.gitmodules` file from the parent repository to extract submodule info.
-
-        Args:
-            base_url (str): The URL of the parent repository.
-
-        Returns:
-            dict: A dictionary mapping submodule names to their Git URLs.
-        """
-        gitmodules_url = f"{base_url}/raw/master/.gitmodules"
-        try:
-            resp = requests.get(gitmodules_url, timeout=5)
-            resp.raise_for_status()
-
-            content = resp.text
-            submodules = {}
-
-            pattern = re.compile(
-                r'\[submodule "(?P<name>[^"]+)"\]\s+path\s*=\s*(?P<path>[^\n]+)\s+url\s*=\s*(?P<url>[^\n]+)',
-                re.MULTILINE
-            )
-
-            for match in pattern.finditer(content):
-                name = match.group("name").strip()
-                url = match.group("url").strip()
-                submodules[name] = url
-
-            return submodules
-
-        except Exception as e:
-            logging.debug(f"[Fetch Fail: .gitmodules] {gitmodules_url}: {e}")
-            return {}
-
     def fetch_requirements(self, module_url):
         """
-        Fetches the requirements.txt content from a script submodule.
+        Fetches the content of the script's `requirements.txt`.
 
         Args:
-            module_url (str): The URL of the submodule repository.
+            module_url (str): The base URL of the script repository.
 
         Returns:
-            str: requirements.txt content if found, else an empty string.
+            str: Raw contents of `requirements.txt`, or an empty string if not found.
         """
         req_url = f"{module_url}/raw/master/requirements.txt"
         try:
@@ -428,13 +404,13 @@ class GitSync(QtCore.QThread):
 
     def fetch_readme(self, module_url):
         """
-        Fetches the README markdown content from a script submodule.
+        Fetches the content of the script's `README.md`.
 
         Args:
-            module_url (str): The URL of the submodule repository.
+            module_url (str): The base URL of the script repository.
 
         Returns:
-            str: README content if found, else an empty string.
+            str: Raw README markdown, or an empty string if not found.
         """
         readme_url = f"{module_url}/raw/master/README.md"
         try:
@@ -447,13 +423,13 @@ class GitSync(QtCore.QThread):
 
     def fetch_icon(self, module_url):
         """
-        Fetches and encodes the icon image for a script submodule.
+        Fetches and base64-encodes the script's icon file `__icon__.ico`.
 
         Args:
-            module_url (str): The URL of the submodule repository.
+            module_url (str): The base URL of the script repository.
 
         Returns:
-            str: Base64-encoded icon data, or an empty string if fetch fails.
+            str: Base64-encoded icon data, or an empty string if not found.
         """
         icon_url = f"{module_url}/raw/master/__icon__.ico"
         try:
@@ -466,11 +442,11 @@ class GitSync(QtCore.QThread):
 
     def determine_status(self, meta_data, local_meta):
         """
-        Compares local and remote metadata to determine the sync status.
+        Determines sync status by comparing local and remote script metadata.
 
         Args:
-            meta_data (dict): Remote metadata for the script.
-            local_meta (dict): Cached local metadata for the script.
+            meta_data (dict): Remote metadata fetched from the script repo.
+            local_meta (dict): Previously cached local metadata.
 
         Returns:
             str: One of 'install', 'update', or 'installed'.
