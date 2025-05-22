@@ -1,7 +1,4 @@
-<p align="center">
-  <img src="ui/resources/netmigbanner.png" alt="Netmig Banner" />
-</p>
-
+# Netmig Application
 
 Netmig is a powerful **graphical user interface (GUI)** tool designed to act as a centralized hub for **network migration automation**. It consolidates reusable tools and scripts into a unified platform, enabling seamless execution, monitoring, and management throughout every stage of the migration lifecycle.
 
@@ -9,7 +6,7 @@ With an emphasis on flexibility and ease of use, Netmig empowers engineers to in
 
 ---
 
-🚀 Key Features
+## 🚀 Key Features
 
 🖥 **Interactive GUI (Qt5)**  
 Simplifies script execution through an intuitive interface — no more terminal commands.
@@ -28,40 +25,6 @@ Netmig uses **Fernet symmetric encryption** (via the `cryptography` library) to 
 
 📈 **Telemetry & Logging**  
 Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
-
----
-
-## 💡 Why Netmig?
-
-Many engineers at Cisco and similar environments build individual automation scripts. However, these often remain:
-- Isolated from broader teams
-- Hard to share or reuse
-- Complex to run from the command line
-
-Netmig solves these problems by:
-- Centralizing all scripts under a common GUI
-- Enabling easier execution, even for non-technical users
-- Improving team collaboration through a shared, managed platform
-
----
-
-## 🧩 Challenges Solved
-
-- ⏱ **Manual Effort**: Automates repetitive migration steps  
-- 🔄 **Script Duplication**: Central repo prevents reinvention  
-- ⚙️ **Complex CLI Execution**: Run everything through a simple UI  
-- 🧭 **Dependency Chaos**: Easier deployment with minimal friction  
-- 🔍 **Debugging**: Logging + telemetry provide real-time visibility
-
----
-
-## ✅ Benefits & Outcomes
-
-- ✔️ Reduces human effort  
-- ✔️ Unifies and streamlines script workflows  
-- ✔️ Simplifies management of multiple scripts and devices  
-- ✔️ Makes automation accessible to more team members  
-- ✔️ Provides insights for continuous improvement
 
 ---
 
@@ -106,33 +69,9 @@ Netmig solves these problems by:
 ✅ That’s it! You’re ready to automate with Netmig.
 
 ---
-## 📦 Downloads
-
-🪟 **[Download Netmig for Windows](https://cisco-my.sharepoint.com/personal/sanjeekr_cisco_com/_layouts/15/download.aspx?UniqueId=37fceda5-000a-44c3-824d-c4dd1f86664c)**  
-Easily install Netmig on Windows with the official installer. No Python setup required.
-
----
-## 📬 Contributions
-
-**Author:** Sanjeev Krishna  
-
-Want to add a new script or tool? Fork the repo, or contact the admin team to publish a new module.
-
----
 
 ## 📄 License
 
 MIT License © 2024 Sanjeev Krishna
 
 ---
-
-## 🔗 Related Repositories
-
-- 📁 **[Netmig Scripts Repository](https://wwwin-github.cisco.com/sanjeekr/netmig-scripts)**  
-  Collection of reusable Python scripts for use with the Netmig platform.
-
-- 🛠️ **[Netmig-At (Admin Tools)](https://wwwin-github.cisco.com/sanjeekr/netmig-at)**  
-  Administrative companion tool, designed to help administrators manage script repositories, monitor user activity, and track automation savings across teams.
-
-- 🧰 **[Netcore (Python Tool-Kit)](https://wwwin-github.cisco.com/sanjeekr/netcore)**  
-  Core Python toolkit for advanced automation tasks, integrations, and extended functionality within the Netmig ecosystem.
