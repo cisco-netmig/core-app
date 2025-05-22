@@ -17,7 +17,7 @@
         "password": ""
     },
     "git_remotes": [
-        "https://wwwin-github.cisco.com/sanjeekr/netmig-scripts"
+        "https://wwwin-github.cisco.com/raw/Netmig/.github/master/script-repos.json"
     ],
     "load_all_scripts": true,
     "output_dir": "",

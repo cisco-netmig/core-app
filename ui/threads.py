@@ -299,12 +299,12 @@ class GitSync(QtCore.QThread):
 
     script_data_chunk = QtCore.pyqtSignal(dict)
 
-    def __init__(self, base_urls, local_cache):
+    def __init__(self, sources, local_cache):
         """
         Initializes the GitSync thread.
 
         Args:
-            base_urls (list[str]): A list of sources — each either a JSON file URL or a direct script repo URL.
+            sources (list[str]): A list of sources — each either a JSON file URL or a direct script repo URL.
             local_cache (dict): Dictionary of locally cached script metadata, keyed by UUID.
         """
         super().__init__()
@@ -327,12 +327,10 @@ class GitSync(QtCore.QThread):
                     resp = requests.get(source, timeout=5)
                     resp.raise_for_status()
                     repos = resp.json()
-                    for entry in repos:
-                        module_url = entry.get("url")
-                        if module_url:
-                            script_data = self.process_script(module_url)
-                            if script_data:
-                                self.script_data_chunk.emit(script_data)
+                    for module_url in repos:
+                        script_data = self.process_script(module_url)
+                        if script_data:
+                            self.script_data_chunk.emit(script_data)
                 else:
                     # Treat as direct script repo
                     script_data = self.process_script(source)
