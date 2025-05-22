@@ -1,4 +1,7 @@
-# Netmig Application
+<p align="left">
+  <img src="./ui/resources/icons/netmig.ico" alt="Netmig Logo" width="32" style="vertical-align:middle; margin-right:10px;">
+  <span style="font-size:2em; font-weight:bold;vertical-align:middle;">Netmig (Application)</span>
+</p>
 
 Netmig is a powerful **graphical user interface (GUI)** tool designed to act as a centralized hub for **network migration automation**. It consolidates reusable tools and scripts into a unified platform, enabling seamless execution, monitoring, and management throughout every stage of the migration lifecycle.
 
@@ -25,48 +28,6 @@ Netmig uses **Fernet symmetric encryption** (via the `cryptography` library) to 
 
 📈 **Telemetry & Logging**  
 Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
-
----
-
-## 🛠 Getting Started
-
-### 🔧 Installation (Quick Steps)
-
-1. **Install Prerequisites**
-   - Python 3.7+ → Check with `python --version`
-   - pip → Check with `pip --version` or install:  
-     ```bash
-     python -m ensurepip --upgrade
-     ```
-
-2. **Clone and Set Up Project**
-   ```bash
-   mkdir Netmig && cd Netmig
-   mkdir netmig-app
-   # Download and extract source into app/
-   ```
-
-3. **Create Virtual Environment**
-   ```bash
-   python -m venv venv
-   # Activate it:
-   # macOS/Linux
-   source venv/bin/activate
-   # Windows
-   venv\Scripts\activate
-   ```
-
-4. **Install Dependencies**
-   ```bash
-   pip install -r netmig-app/requirements.txt
-   ```
-
-5. **Launch Netmig**
-   ```bash
-   python netmig-app
-   ```
-
-✅ That’s it! You’re ready to automate with Netmig.
 
 ---
 
