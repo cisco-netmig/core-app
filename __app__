@@ -1,7 +1,7 @@
 {
-    "version": "2.1.0",
+    "version": "2.2.0",
     "author": "Sanjeev Krishna",
     "title": "Netmig Automation-Suite",
-    "copyright": "Copyright (c) 2024 Sanjeev Krishna",
+    "copyright": "Copyright (c) 2024 - 2025 Sanjeev Krishna",
     "git": "https://wwwin-github.cisco.com/Netmig/core-app"
 }

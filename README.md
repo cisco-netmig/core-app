@@ -9,29 +9,29 @@ With an emphasis on flexibility and ease of use, Netmig empowers engineers to in
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-🖥 **Interactive GUI (Qt5)**  
+**Interactive GUI (Qt5)**  
 Simplifies script execution through an intuitive interface — no more terminal commands.
 
-🧰 **Built-in Tools**  
+**Built-in Tools**  
 Comes with a growing collection of preloaded scripts designed for network discovery, configuration, verification, and troubleshooting.
 
-➕ **Add Local Scripts**  
+**Add Local Scripts**  
 Easily import and run your own Python scripts within Netmig's environment.
 
-🌐 **Remote Script Execution**  
+**Remote Script Execution**  
 Manage and execute scripts on remote devices directly from the UI.
 
-🔐 **Security**  
+**Security**  
 Netmig uses **Fernet symmetric encryption** (via the `cryptography` library) to securely store sensitive information like passwords, with encryption keys protected in the system keyring.
 
-📈 **Telemetry & Logging**  
+**Telemetry & Logging**  
 Full visibility into script usage, execution history, and user actions — great for debugging and optimization.
 
 ---
 
-## 📄 License
+## License
 
 MIT License © 2024 Sanjeev Krishna
 
