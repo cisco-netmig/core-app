@@ -1,7 +1,4 @@
-<div style="display: inline-flex; align-items: flex-start; gap: 10px;">
-  <img src="./ui/resources/icons/netmig.ico" alt="Netmig Logo" width="32" height="32">
-  <span style="font-size: 1.5em; font-weight: bold;">Netmig (Application)</span>
-</div>
+# Netmig (Application)
 
 Netmig is a powerful **graphical user interface (GUI)** tool designed to act as a centralized hub for **network migration automation**. It consolidates reusable tools and scripts into a unified platform, enabling seamless execution, monitoring, and management throughout every stage of the migration lifecycle.
 
