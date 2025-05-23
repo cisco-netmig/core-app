@@ -1,5 +1,5 @@
-<div style="display: flex; align-items: center;">
-  <img src="./ui/resources/icons/netmig.ico" alt="Netmig Logo" width="32" style="margin-right: 10px;">
+<div style="display: inline-flex; align-items: center; gap: 10px;">
+  <img src="./ui/resources/icons/netmig.ico" alt="Netmig Logo" width="32" height="32">
   <span style="font-size: 1.5em; font-weight: bold;">Netmig (Application)</span>
 </div>
 
