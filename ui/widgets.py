@@ -391,7 +391,7 @@ class ScriptExecutor(QtCore.QObject):
 
         qss_path = os.path.join(sys.modules["utils"].PATH_QSS_DIR, f"{self.mainwindow.app.theme.lower()}-runner.qss")
         args = [
-            sys.executable,
+            sys.executable.replace("pythonw.exe", "python.exe"),
             "-m",
             os.path.basename(path),
             "--lib", json.dumps(sys.path),
