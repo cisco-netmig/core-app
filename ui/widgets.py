@@ -390,7 +390,6 @@ class ScriptExecutor(QtCore.QObject):
             return
 
         qss_path = os.path.join(sys.modules["utils"].PATH_QSS_DIR, f"{self.mainwindow.app.theme.lower()}-runner.qss")
-        print(qss_path)
         args = [
             sys.executable,
             "-m",
