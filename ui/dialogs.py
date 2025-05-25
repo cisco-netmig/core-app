@@ -892,9 +892,9 @@ class Preferences(QtWidgets.QDialog):
         layout.addWidget(note_label)
 
         note_link = QtWidgets.QLabel(
-            '<a href="https://wwwin-github.cisco.com/sanjeekr/netmig-at" '
+            '<a href="https://wwwin-github.cisco.com/Netmig/core-admin-tools" '
             'style="color:#1a73e8; text-decoration:underline;">'
-            'https://wwwin-github.cisco.com/sanjeekr/netmig-at</a>'
+            'https://wwwin-github.cisco.com/Netmig/core-admin-tools</a>'
         )
         note_link.setOpenExternalLinks(True)
         note_link.setStyleSheet("font-weight:300")
