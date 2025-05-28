@@ -364,10 +364,18 @@ class ScriptOrchestrator:
 
     def load_scripts(self):
         """
-        Add all scripts marked for loading to the scripts and runner docks.
+        Add all scripts marked for loading to the scripts and runner docks,
+        sorted by the script name.
         """
         self.mainwindow.scripts_dock.script_button_list.clear()
-        for script_id, script_data in self.mainwindow.cache["scripts"].items():
+
+        # Sort scripts by the "name" field
+        sorted_scripts = sorted(
+            self.mainwindow.cache["scripts"].items(),
+            key=lambda item: item[1].get("name", "").lower()  # Use lower() for case-insensitive sort
+        )
+
+        for script_id, script_data in sorted_scripts:
             if not script_data.get("load"):
                 logging.debug(f"Skipping unloaded script: {script_id}")
                 continue
