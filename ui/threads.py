@@ -484,7 +484,7 @@ class GitInstaller(QtCore.QThread):
         repo_url = self.script_data.get("module")
         script_name = self.script_data.get("name")
         repo_name = repo_url.rstrip("/").split("/")[-1]
-        script_path = os.path.join(sys.modules["utils"].PATH_SCRIPTS_DIR, repo_name)
+        script_path = str(os.path.join(sys.modules["utils"].PATH_SCRIPTS_DIR, repo_name))
 
         try:
             if os.path.exists(script_path):
