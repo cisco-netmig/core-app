@@ -262,8 +262,7 @@ def install_requirements(requirements_text):
         requirements_text (str): Contents of requirements.txt
     """
     try:
-        python_exe = sys.executable.replace("pythonw.exe", "python.exe")
-        installed = subprocess.check_output([python_exe, "-m", "pip", "freeze"]).decode().lower()
+        installed = subprocess.check_output([sys.executable, "-m", "pip", "freeze"]).decode().lower()
         installed_packages = set(re.split("[=@]", pkg)[0].strip() for pkg in installed.splitlines())
 
         missing_packages = []
@@ -281,7 +280,7 @@ def install_requirements(requirements_text):
 
         if missing_packages:
             logging.debug(f"Installing missing packages: {missing_packages}")
-            subprocess.check_call([python_exe, "-m", "pip", "install", *missing_packages])
+            subprocess.check_call([sys.executable, "-m", "pip", "install", *missing_packages])
             logging.debug("All missing requirements installed successfully.")
         else:
             logging.info("All required packages already installed. Nothing to do.")
