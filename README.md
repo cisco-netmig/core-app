@@ -33,3 +33,5 @@ Full visibility into script usage, execution history, and user actions — great
 MIT License © 2024 Sanjeev Krishna
 
 ---
+
+![Screenshot](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/mainwindow.png)
