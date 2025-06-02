@@ -34,4 +34,11 @@ MIT License © 2024 Sanjeev Krishna
 
 ---
 
+## Screenshots
+
 ![Screenshot](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/mainwindow.png)
+![Screenshot](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/inventory.png)
+![Screenshot](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/network-session-manager.png)
+![Screenshot](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/mainwindow_dark.png)
+
+---
