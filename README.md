@@ -33,19 +33,3 @@ Full visibility into script usage, execution history, and user actions — great
 MIT License © 2024 Sanjeev Krishna
 
 ---
-
-## Screenshots
-
-**Mainwindow** 
-![Mainwindow](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/mainwindow.png)
-
-**Inventory** 
-![Inventory](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/inventory.png)
-
-**Network Session Manager** 
-![Network Session Manager](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/network-session-manager.png)
-
-**Mainwindow (Dark)** 
-![Mainwindow (Dark)](https://wwwin-github.cisco.com/Netmig/resources-public/blob/master/screenshots/core-app/mainwindow_dark.png)
-
----
