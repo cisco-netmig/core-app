@@ -362,6 +362,12 @@ QStatusBar QPushButton:hover {
     opacity: 100;
     font-weight: 500;
 }
+#SplashContent, #SplashContent QLabel {
+    background-color: #ffffff;
+    border-radius: 8px;
+    color: #000000;
+    font-weight: 300;
+}
 /*--------------------------------------------------Inventory--------------------------------------------------*/
 #Inventory QFrame{
     border: none;

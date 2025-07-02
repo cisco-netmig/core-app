@@ -501,6 +501,12 @@ QScrollBar {
     opacity: 100;
     font-weight: 500;
 }
+#SplashContent, #SplashContent QLabel {
+    background-color: #28282B;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 300;
+}
 /*--------------------------------------------------Inventory--------------------------------------------------*/
 #Inventory QWidget {
     color: #ffffff;
