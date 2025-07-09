@@ -22,6 +22,7 @@ import subprocess
 import shlex
 import threading
 import markdown
+import tempfile
 
 
 def ensure_directories_exist(paths: list[str]) -> None:
@@ -262,9 +263,22 @@ def install_requirements(requirements_text):
         requirements_text (str): Contents of requirements.txt
     """
     try:
-        installed = subprocess.check_output([sys.executable, "-m", "pip", "freeze"]).decode().lower()
-        installed_packages = set(re.split("[=@]", pkg)[0].strip() for pkg in installed.splitlines())
+        # Redirect pip freeze output to a temporary file
+        with tempfile.NamedTemporaryFile(mode="r+", delete=False) as tmp_file:
+            freeze_output_path = tmp_file.name
 
+        subprocess.check_call(
+            f'"{sys.executable}" -m pip freeze > "{freeze_output_path}"',
+            shell=True
+        )
+
+        # Read the frozen packages from the temp file
+        with open(freeze_output_path, "r") as f:
+            installed = f.read().lower()
+
+        os.remove(freeze_output_path)  # Clean up temp file
+
+        installed_packages = set(re.split("[=@]", pkg)[0].strip() for pkg in installed.splitlines())
         missing_packages = []
 
         for line in requirements_text.splitlines():
