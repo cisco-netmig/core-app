@@ -351,7 +351,7 @@ class GitSync(QtCore.QThread):
             dict or None: A dictionary keyed by script UUID containing full script metadata,
                           or None if fetching or parsing fails.
         """
-        meta_url = f"{module_url}/raw/master/__meta__"
+        meta_url = f"{module_url}/raw/main/__meta__"
         try:
             resp = requests.get(meta_url, timeout=5)
             resp.raise_for_status()
@@ -391,7 +391,7 @@ class GitSync(QtCore.QThread):
         Returns:
             str: Raw contents of `requirements.txt`, or an empty string if not found.
         """
-        req_url = f"{module_url}/raw/master/requirements.txt"
+        req_url = f"{module_url}/raw/main/requirements.txt"
         try:
             resp = requests.get(req_url, timeout=5)
             if resp.ok:
@@ -410,7 +410,7 @@ class GitSync(QtCore.QThread):
         Returns:
             str: Raw README markdown, or an empty string if not found.
         """
-        readme_url = f"{module_url}/raw/master/README.md"
+        readme_url = f"{module_url}/raw/main/README.md"
         try:
             resp = requests.get(readme_url, timeout=5)
             if resp.ok:
@@ -429,7 +429,7 @@ class GitSync(QtCore.QThread):
         Returns:
             str: Base64-encoded icon data, or an empty string if not found.
         """
-        icon_url = f"{module_url}/raw/master/__icon__.ico"
+        icon_url = f"{module_url}/raw/main/__icon__.ico"
         try:
             resp = requests.get(icon_url, timeout=5)
             if resp.ok:

@@ -610,7 +610,7 @@ class CheckUpdates(QtWidgets.QDialog):
         """Start thread to check the latest version from GitHub."""
         logging.debug("Checking for updates from GitHub.")
         self.text_edit.setText('Checking for updates...')
-        git_url = f"{self.mainwindow.cache['app_info']['git']}/blob/master/__app__?raw=true"
+        git_url = f"{self.mainwindow.cache['app_info']['git']}/blob/main/__app__?raw=true"
         self.threads['check_version'] = sys.modules["ui"].CheckGitVersion(git_url)
         self.threads['check_version'].version_signal.connect(self._on_git_version_received)
         self.threads['check_version'].message_signal.connect(self.text_edit.setText)
@@ -640,7 +640,7 @@ class CheckUpdates(QtWidgets.QDialog):
     def _get_requirements(self):
         """Fetch updated requirements.txt from the repo."""
         logging.debug("Fetching requirements.txt from GitHub.")
-        req_url = f"{self.mainwindow.cache['app_info']['git']}/blob/master/requirements.txt?raw=true"
+        req_url = f"{self.mainwindow.cache['app_info']['git']}/blob/main/requirements.txt?raw=true"
         self.threads['requirements'] = sys.modules["ui"].GetRequirements(req_url)
         self.threads['requirements'].message_signal.connect(self.text_edit.setText)
         self.threads['requirements'].finished.connect(self._download_repo)
@@ -649,7 +649,7 @@ class CheckUpdates(QtWidgets.QDialog):
     def _download_repo(self):
         """Download and extract the latest repo from GitHub."""
         logging.info("Starting repository download.")
-        zip_url = f"{self.mainwindow.cache['app_info']['git']}/zipball/master/"
+        zip_url = f"{self.mainwindow.cache['app_info']['git']}/zipball/main/"
         self.text_edit.setText("Downloading update...")
         self.threads['download_repo'] = sys.modules["ui"].DownloadRepo(
             zip_url,

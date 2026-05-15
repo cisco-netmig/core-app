@@ -17,7 +17,7 @@
         "password": ""
     },
     "git_remotes": [
-        "https://raw.githubusercontent.com/cisco-netmig/.github/refs/heads/master/script-repos.json"
+        "https://raw.githubusercontent.com/cisco-netmig/.github/refs/heads/main/script-repos.json"
     ],
     "load_all_scripts": true,
     "output_dir": "",
